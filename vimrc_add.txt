@@ -1,0 +1,5 @@
+" // Add the two Lines below to ~/.vimrc and you will have syntax 
+" // highlighting for the Arduino files (*.ino)
+
+" Arduino
+au BufNewFile,BufRead *.ino,*.pde		setf arduino
