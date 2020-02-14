@@ -116,7 +116,7 @@ int t_zweisechzehntel;
 void setup(){
 	// pinMode for all pins
 	pinMode(tasterpin, INPUT_PULLUP);
-	pinMode(lichtschrankenpin, INPUT);
+	pinMode(lichtschrankenpin, INPUT_PULLUP);
 	pinMode(refrain_schalter, INPUT_PULLUP);
 	pinMode(onboardled, OUTPUT);
 
@@ -425,7 +425,7 @@ void bh   (int waittime){tone(tonepin, 1975); delay(waittime);}
 
 void leds(){
 	// LED blink with shift register
-	for(int i=0; i<42; i++){ // 42 times
+	for(int i=0; i<4; i++){ // 42 times
 		led7(1);
 		led6(1);
 		led3(1);
@@ -525,6 +525,7 @@ void leds(){
 		delay(50);
 		led5(0);
 		delay(50);
+		led2(0);
 	}
 	servo(0); ///////////////////////////////////////////////////////////// do servo XXX XXX
 	delay(1000); // laesst dem Servomotor Zeit, die Zielposition zu erreichen
