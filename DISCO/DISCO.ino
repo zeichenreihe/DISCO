@@ -63,11 +63,11 @@
 	///// refrain spielen <ja/nein/schalter waehlen>
 	/// nur einen waehlen
 	/// ja 
-	#define PLAY_REFRAIN
+	//#define PLAY_REFRAIN
 	/// nein
 	//#define PLAY_REFRAIN_NOT
 	/// schalter
-	//#define PLAY_REFRAIN_SWICH
+	#define PLAY_REFRAIN_SWICH
 // </config>
 
 // special functions for testing etc. MAY NOT WORKING
