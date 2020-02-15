@@ -109,3 +109,6 @@ serial-direct:
 
 git-pull:
 	git pull git@pixy:/home/public/git/nwt-projekt.git
+
+git-push:
+	git push origin master
