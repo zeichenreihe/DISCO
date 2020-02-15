@@ -106,3 +106,6 @@ serial:
 
 serial-direct:
 	@screen $(PORT)
+
+git-pull:
+	git pull git@pixy:/home/public/git/nwt-projekt.git
