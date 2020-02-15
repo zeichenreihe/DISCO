@@ -59,6 +59,7 @@
 
 	/// servo
 	#define SERVO // NOT WORKING ON P35 ////////////////////////////////////////////// XXX correct servo.h etc.
+	int servo_null = 75;
 
 	///// refrain spielen <ja/nein/schalter waehlen>
 	/// nur einen waehlen
@@ -88,6 +89,7 @@ Servo myservo; // erstellt ein Servo-Objekt um einen Servomotor zu steuern
 
 //// declaration and definiton of the variables
 boolean noleds = false; // the noleds variable
+int servo_hidden = 180 - servo_null; // hidden position for the person
 int sr_high = 1; // the HIGH state for the shift register
 int sr_low = 0; // the LOW state for the shift register
 
@@ -131,7 +133,7 @@ void setup(){
 	while(!Serial){;} // serial connect loop
 	Serial.println("Hello_World!_Please_enter_0_for_song_and_leds,_1_for_only_leds,_2_for_song_without_leds_and_3_for_an_voltage_display_on_A0."); // only one word -> only one string in C (for future)
 #endif
- 	servo(90); // servo auf 90 Grad
+ 	servo(servo_hidden); // hide person
 	set_tones(); // tone lenght set
 	noleds = false; // false = bei song blinken LEDs
 	digitalWrite(onboardled, LOW); // schalte onboardled aus
@@ -176,7 +178,7 @@ void voltmeter(){ // function for a voltmeter (not conected)
 	}
 #endif
 }
-int refrain_play(){ // Funktion, die zurueckgibt, ob der Refrain (teils zwiete Stimme) gespielt werden soll
+int refrain_play(){ // Funktion, die zurueckgibt, ob der Refrain (teils zweite Stimme) gespielt werden soll
 	int ref_play =  digitalRead(refrain_schalter);
 #ifdef PLAY_REFRAIN
 	return 1; // play the refrain
@@ -226,7 +228,14 @@ void set_tones(){ // function that sets the lenght of tones
 	t_zweisechzehntel = t_viertel / 8;
 #endif
 }
-void servo(int pos){ // Servo write with servo(pos);, but only if servo is needet
+void servo(int pos){ // Servo write with servo(pos); (pos is relative to 90° or up), but only if servo is needet
+	if(pos < -35){
+		return; // return for the person
+	}
+	pos = servo_null + pos; // make pos relative to servo_null
+	if(pos > 180 || pos < 0){
+		return; // return because then the servo can't go in that position
+	}
 #ifdef SERVO
 	myservo.write(pos);
 #endif
@@ -527,7 +536,7 @@ void leds(){
 		delay(50);
 		led2(0);
 	}
-	servo(0); ///////////////////////////////////////////////////////////// do servo XXX XXX
+	servo(-35); ///////////////////////////////////////////////////////////// do servo XXX XXX
 	delay(1000); // laesst dem Servomotor Zeit, die Zielposition zu erreichen
 #ifdef SERIAL // menu only needet when serial is needet
 	Serial.println("main();");
@@ -1602,7 +1611,7 @@ void song(){
 	//////////////////////////// XXX in S21 T7 ganz tiefer ton benoetigt (ton nr. 5).
 
 	d(t_halbe); //////////////////////////////// do servo XXX
-	servo(180);
+	servo(50);
 	digitalWrite(onboardled, LOW);
 #ifdef SERIAL // menu only needet when serial is needet
 	Serial.println("main();");
@@ -1633,7 +1642,9 @@ OPTIONS
                 peipsig sind.
 
          #define SERVO
-                aktiviert den Servo, sodass dieser sich bewegt.
+	 int servo_null = 75;
+                aktiviert den Servo, sodass dieser sich bewegt und setzt die Nullposition
+		des Servos.
 
          #define PLAY_REFRAIN
                 spielt immer den Refrain
