@@ -58,7 +58,7 @@
 	//#define TOENE_TIEFER
 
 	/// servo
-//	#define SERVO // NOT WORKING ON P35 ////////////////////////////////////////////// XXX correct servo.h etc.
+	#define SERVO // NOT WORKING ON P35 ////////////////////////////////////////////// XXX correct servo.h etc.
 
 	///// refrain spielen <ja/nein/schalter waehlen>
 	/// nur einen waehlen
@@ -168,7 +168,7 @@ void noleds_song(){ // function for calling the song without leds
 	noleds = true; // true = keine LEDs
 	song();
 }
-void voltmeter(){ // function for a voltmeter
+void voltmeter(){ // function for a voltmeter (not conected)
 	while(1){ // you have to reset your arduino after using the voltmeter
 		Serial.print(map(analogRead(A0), 0, 1023, 0, 5000)); // print on serial the value form 0 to 1024 mapped to 0 to 5000
 		Serial.println("mV"); // print mV
@@ -913,12 +913,6 @@ void song(){
 	bg(t_viertel);
 	if(refrain_play() == 0){
 		d(t_halbe); // ohne ref.
-		/* //////////////////////////////////////////////////////////////////////////////////// NO NEED XXX
-		tone(tonepin, 1000); delay(100); noTone(tonepin); delay(900);
-		tone(tonepin, 1000); delay(100); noTone(tonepin); delay(900);
-		tone(tonepin, 1000); delay(100); noTone(tonepin); delay(900);
-		tone(tonepin, 1000); delay(100); noTone(tonepin); delay(900);
-		tone(tonepin, 1000); delay(1000); noTone(tonepin);*/
 		// T4
 		d(t_ganze);
 		// T5
@@ -1352,14 +1346,21 @@ void song(){
 		bdis(t_achtel); d(t_neuanschlag);
 		bdis(t_achtel);
 	}
-	////////////////////////////////////////////////////////////// XXX fuellen start
 	// T3
-	d(t_ganze);
+	d(t_achtel);
+	bais(t_viertel);
+	bfis(t_viertel);
+	bf(t_achtel);
+	bcis(t_viertel);
 	// T4
-	d(t_ganze);
+	afis(t_viertel);
+	ag(t_viertel);
+	agis(t_viertel);
+	aais(t_viertel);
 	// H T5
-	d(t_halbe); d(t_achtel);
-	///////////////////////////////////////////////////////////// XXX fuellen end
+	bcis(t_viertel);
+	bd(t_viertel);
+	bdis(t_achtel);
 	aais(t_achtel); d(t_neuanschlag);
 	aais(t_achtel); d(t_neuanschlag);
 	aais(t_achtel);
@@ -1370,11 +1371,14 @@ void song(){
 	aais(t_achtel);
 	bc(t_achtel);
 	aais(t_achtel);
-	///////////////////////////////////////////////////////////// XXX feullen start
-	d(t_viertel);
-	// T7 
-	d(t_halbe); d(t_viertel);
-	/////////////////////////////////////////////////////////// XXX fuellen end
+	aais(t_achtel); d(t_neuanschlag);
+	aais(t_achtel);
+	// T7
+	bc(t_achtel);
+	aais(t_achtel);
+	agis(t_achtel);
+	ag(t_achtel);
+	af(t_viertel);
 	aais(t_viertel);
 	// T8
 	if(refrain_play()==0){
@@ -1429,7 +1433,172 @@ void song(){
 		bf(t_ganze); bf(t_ganze);
 	}
 	// T6
-	//////////////////////////// XXX Ergaenzen S16 T6 ab I
+	bdis(t_viertel_t);
+	ag(t_viertel_t);
+	agis(t_viertel_t);
+	aais(t_achtel); aais(t_sechzehntel);
+	bc(t_sechzehntel);
+	bd(t_sechzehntel);
+	bdis(t_achtel); bdis(t_sechzehntel); d(t_neuanschlag);
+	// T7
+	bdis(t_viertel_t);
+	ag(t_viertel_t);
+	bc((t_viertel_t) / 2);
+	aais((t_viertel_t) / 2); d(t_neuanschlag);
+	aais(t_achtel_t);
+	bc(t_achtel_t);
+	aais(t_achtel_t); aais(t_viertel);
+	// S17 T1
+	bdis(t_viertel_t);
+	ag(t_viertel_t);
+	agis(t_viertel_t);
+	aais(t_achtel); aais(t_sechzehntel);
+	bc(t_sechzehntel);
+	bd(t_sechzehntel);
+	bdis(t_achtel); bdis(t_sechzehntel);
+	// T2
+	bf(t_viertel_t);
+	agis(t_viertel_t);
+	aais(t_viertel_t);
+	bc(t_achtel_t);
+	bd(t_achtel_t);
+	bc(t_achtel_t); bc(t_viertel);
+	// T3
+	d(t_viertel_t);
+	agis(t_viertel_t); d(t_neuanschlag);
+	agis(t_viertel_t); d(t_neuanschlag);
+	agis(t_viertel_t);
+	ag(t_viertel_t);
+	af(t_viertel_t);
+	// T4
+	ag(t_viertel_t);
+	af(t_viertel_t); d(t_neuanschlag);
+	af(t_viertel_t); d(t_neuanschlag);
+	af(t_sechzehntel);
+	adis(t_achtel); adis(t_sechzehntel); d(t_neuanschlag);
+	adis(t_viertel);
+	// T5 wg. Taktart wechsel
+	ad(t_achtel); ad(t_sechzehntel);
+	adis(t_sechzehntel);
+	af(t_viertel);
+	aais(t_achtel_t); d(t_neuanschlag);
+	aais(t_achtel_t);
+	agis(t_achtel_t);
+	aais(t_achtel_t);
+	agis(t_achtel_t);
+	af(t_achtel_t);
+	d(t_achtel);
+	bd(t_achtel); bd(t_viertel); // vib.
+       	// T6
+	d(t_viertel_t);
+	agis(t_viertel_t); d(t_neuanschlag);
+	agis(t_viertel_t); d(t_neuanschlag);
+
+	agis(t_viertel_t);
+	ag(t_viertel_t); d(t_neuanschlag);
+	ag(t_viertel_t); d(t_neuanschlag);
+	// T7
+	ag(t_viertel_t);
+	af(t_viertel_t); d(t_neuanschlag);
+	af(t_viertel_t); d(t_neuanschlag);
+
+	af(t_viertel_t);
+	adis(t_viertel_t); d(t_neuanschlag);
+	adis(t_viertel_t);
+	// S18 T1
+	agis(t_achtel); agis(t_sechzehntel);
+	aais(t_sechzehntel);
+	bc(t_viertel);
+	adis(t_viertel);
+	d(t_viertel);
+	// T2
+	agis(t_ganze);
+	// T3
+	ag(t_achtel); ag(t_sechzehntel);
+	af(t_sechzehntel); d(t_neuanschlag);
+	af(t_halbe); af(t_viertel);
+	// T4
+	d(t_viertel_t);
+	agis(t_viertel_t); d(t_neuanschlag);
+	agis(t_viertel_t); d(t_neuanschlag);
+	agis(t_viertel_t);
+	ag(t_viertel_t); d(t_neuanschlag);
+	ag(t_viertel_t); d(t_neuanschlag);
+	// T5
+	ag(t_achtel); ag(t_sechzehntel);
+	af(t_sechzehntel); d(t_neuanschlag);
+	af(t_viertel); d(t_neuanschlag);
+	af(t_achtel); af(t_sechzehntel);
+	ag(t_sechzehntel); d(t_neuanschlag);
+	ag(t_viertel);
+	// T6
+	adis(t_viertel); d(t_neuanschlag);
+	adis(t_achtel); d(t_neuanschlag);
+	adis(t_achtel); d(t_neuanschlag);
+	adis(t_viertel);
+	af(t_halbe);
+	// T7
+	adis(t_viertel); d(t_neuanschlag);
+	adis(t_achtel); d(t_neuanschlag);
+	adis(t_achtel); d(t_neuanschlag);
+	adis(t_viertel);
+	af(t_viertel_t);
+	adis(t_viertel_t);
+	ad(t_viertel_t);
+	// T8
+	if(refrain_play()==0){
+		adis(t_viertel);
+		hh(t_halbe); hh(t_viertel);
+	}else{
+		bdis(t_viertel_t);
+		ag(t_viertel_t);
+		agis(t_viertel_t);
+		aais(t_achtel); aais(t_sechzehntel);
+		bc(t_sechzehntel);
+		bd(t_sechzehntel);
+		bdis(t_achtel); bdis(t_sechzehntel); d(t_neuanschlag);
+	}
+	// S19 T1
+	bdis(t_viertel_t);
+	ag(t_viertel_t);
+	agis(t_viertel_t);
+	aais(t_achtel_t);
+	bc(t_achtel_t);
+	aais(t_achtel_t); d(t_neuanschlag);
+	aais(t_viertel);
+	// T2
+	bdis(t_viertel_t);
+	ag(t_viertel_t);
+	agis(t_viertel_t);
+	aais(t_achtel); aais(t_sechzehntel);
+	bc(t_sechzehntel);
+	bd(t_sechzehntel);
+	bdis(t_achtel); bdis(t_sechzehntel);
+	// T3
+	bf(t_viertel_t);
+	aa(t_viertel_t);
+	aais(t_viertel_t);
+	bc(t_achtel); bc(t_sechzehntel);
+	bd(t_sechzehntel);
+	be(t_sechzehntel);
+	bf(t_achtel); bf(t_sechzehntel);
+	// T4
+	ag(t_achtel_t);
+	agis(t_achtel_t);
+	aais(t_achtel_t); aais(t_achtel_t);
+	agis(t_achtel_t);
+	aais(t_achtel_t);
+	bc(t_achtel); bc(t_sechzehntel);
+	aais(t_sechzehntel);
+	bc(t_sechzehntel);
+	bcis(t_achtel); bcis(t_sechzehntel);
+	// T5
+	
+	// T6
+	// T7
+	// T8
+	// S20 T1
+	//////////////////////////// XXX Ergaenzen S19 ab T5
 	//////////////////////////// XXX in S21 T7 ganz tiefer ton benoetigt (ton nr. 5).
 
 	d(t_halbe); //////////////////////////////// do servo XXX
