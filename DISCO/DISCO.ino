@@ -90,6 +90,7 @@ Servo myservo; // erstellt ein Servo-Objekt um einen Servomotor zu steuern
 //// declaration and definiton of the variables
 boolean noleds = false; // the noleds variable
 int servo_hidden = 180 - servo_null; // hidden position for the person
+int servo_pos; // variable that contains the position of the servo
 int sr_high = 1; // the HIGH state for the shift register
 int sr_low = 0; // the LOW state for the shift register
 
@@ -131,7 +132,7 @@ void setup(){
 #ifdef SERIAL // only when Seral is needet
 	Serial.begin(9600); // serial communication
 	while(!Serial){;} // serial connect loop
-	Serial.println("Hello_World!_Please_enter_0_for_song_and_leds,_1_for_only_leds,_2_for_song_without_leds_and_3_for_an_voltage_display_on_A0."); // only one word -> only one string in C (for future)
+	Serial.println("Hello_World!_0_=_song();_1_=_leds();_2_=_noleds_song();_3_voltmeter();."); // only one word -> only one string in C (for future)
 #endif
  	servo(servo_hidden); // hide person
 	set_tones(); // tone lenght set
@@ -139,6 +140,7 @@ void setup(){
 	digitalWrite(onboardled, LOW); // schalte onboardled aus
 	delay(100);
 	timesignal(4);
+	servo(0);
 }
 void loop(){
 	if(digitalRead(tasterpin) == LOW){ // wenn taster gedrueckt
@@ -175,9 +177,15 @@ void voltmeter(){ // function for a voltmeter (not conected)
 		Serial.print(map(analogRead(A0), 0, 1023, 0, 5000)); // print on serial the value form 0 to 1024 mapped to 0 to 5000
 		Serial.println("mV"); // print mV
 		delay(100); // wait 100ms
-	}
+}
 #endif
 }
+//////////////////////////////////////////////////// XXX dance not needet
+void dance(){ // function to let the person dance
+	servo_toggle(10, -10);
+	delay(1000);
+}
+
 int refrain_play(){ // Funktion, die zurueckgibt, ob der Refrain (teils zweite Stimme) gespielt werden soll
 	int ref_play =  digitalRead(refrain_schalter);
 #ifdef PLAY_REFRAIN
@@ -233,7 +241,29 @@ void servo(int pos){ // Servo write with servo(pos); (pos is relative to 90° or
 		return; // return for the person
 	}
 	pos = servo_null + pos; // make pos relative to servo_null
-	if(pos > 180 || pos < 0){
+	servo_pos = pos; // save the position
+	servo_write(pos);
+}
+void servo_rel(int pos){ // Servo write relative to last position
+	pos = servo_pos + pos; // make pos relative to servo_pos
+	servo_pos = pos; // save the position
+	servo_write(pos);
+}
+void servo_toggle(int minpos, int maxpos){ // move servo to other position 
+	maxpos = servo_null + maxpos; // make maxpos relative to servo_null
+	minpos = servo_null + minpos; // make minpos relative to servo_null
+	if(servo_pos == maxpos){ // if on maxpos
+		servo_pos = minpos; // save pos
+		servo_write(minpos);  // goto minpos
+		led1(0);
+	}else{ // else
+		led1(1);
+		servo_pos = maxpos; // save pos
+		servo_write(maxpos); // goto maxpos
+	}
+}
+void servo_write(int pos){ // direct servo write with protection
+	if(pos > 180 || pos < 0 || pos < 40){
 		return; // return because then the servo can't go in that position
 	}
 #ifdef SERVO
