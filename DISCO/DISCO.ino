@@ -577,6 +577,20 @@ void song(){
 	// music + leds + servo
 	digitalWrite(onboardled, HIGH);
 
+	/*
+	 *
+	 *                      _B_o_h_e_m_i_a_n_ _R_h_a_p_s_o_d_y_
+	 *
+	 *                       Words and Music by Freddy Mercury
+	 *
+	 *
+	 *    (c) 1975 (Renewed 2003) B. FELDMAN & CO., LTD., Trading As TRIDENT MUSIC
+	 *         All Rights Controlled and Administered by GLENWOOD MUSIC CORP.
+	 *    All Rights Reserved  International Copyright Secured  Used by Permission
+	 *
+	*/
+
+/*
 	// S4 intro T1
 	bais(t_achtel); d(t_neuanschlag);
 	bais(t_achtel); d(t_neuanschlag);
@@ -1632,11 +1646,118 @@ void song(){
 	bc(t_sechzehntel);
 	bcis(t_achtel); bcis(t_sechzehntel);
 	// T5
-	//foo
+	adis(t_achtel_t);
+	ae(t_achtel_t);
+	afis(t_achtel_t);
+	agis(t_achtel_t);
+	aa(t_achtel_t);
+	bc(t_achtel_t);
+	bcis(t_achtel_t);
+	bc(t_achtel_t);
+	bcis(t_achtel_t);
+	bdis(t_sechzehntel);
+	be(t_achtel); be(t_sechzehntel);
+	// T6
+	agis(t_achtel_t);
+	aais(t_achtel_t);
+	bc(t_achtel_t);
+	bcis(t_achtel_t);
+	bdis(t_achtel_t);
+	bf(t_achtel_t);
+	bfis(t_achtel_t);
+	bf(t_achtel_t);
+	bfis(t_achtel_t);
+	bgis(t_sechzehntel);
+	bais(t_achtel); bais(t_sechzehntel);
+	// T7
+	hh(t_achtel_t);
+	ac(t_achtel_t);
+	ad(t_achtel_t);
+	ac(t_achtel_t);
+	ad(t_achtel_t);
+	adis(t_achtel_t);
+	af(t_achtel_t);
+	adis(t_achtel_t);
+	af(t_achtel_t);
+	ag(t_sechzehntel);
+	agis(t_achtel); agis(t_sechzehntel);
+	// T8
+	hh(t_achtel_t);
+	ac(t_achtel_t);
+	ad(t_achtel_t);
+	ac(t_achtel_t);
+	ad(t_achtel_t);
+	adis(t_achtel_t);
+	af(t_achtel_t);
+	adis(t_achtel_t);
+	af(t_achtel_t);
+	ag(t_achtel_t);
+	agis(t_achtel_t);
+	ag(t_achtel_t);
+	// S20 T1 wg. Taktart wechsel
+	agis(t_achtel_t);
+	aais(t_achtel_t);
+	bc(t_achtel_t);
+	aais(t_achtel_t);
+	bd(t_achtel_t);
+	aais(t_achtel_t);
+	bf(t_achtel);
+	aais(t_achtel);
+	// K T2
+	if(refrain_play()==0){
+		bg(t_halbe);
+		bgis(t_halbe);
+		// T3
+		bg(t_halbe); d(t_neuanschlag);
+		bg(t_viertel);
+		bdis(t_viertel);
+		// T4
+		bg(t_viertel);
+		bdis(t_viertel);
+	}else{
+		bdis(t_halbe);
+		bd(t_halbe);
+		// T3
+		bc(t_halbe);
+		ah(t_viertel);
+		ag(t_viertel);
+		// T4
+		ah(t_viertel);
+		ag(t_viertel);
+	}*/
+	if(refrain_play()==0){ // XXX make other voices
+		bd(t_viertel);
+		ag(t_viertel);
+		// T5
+		afis(t_halbe);
+		aais(t_halbe);
+		// T6
+		bc(t_halbe);
+		bg(t_halbe);
+	}else{
+		agis(t_viertel);
+		adis(t_viertel);
+		// T5
+		ad(t_halbe);
+		ag(t_halbe);
+		// T6
+		agis(t_halbe);
+		bdis(t_halbe);
+	}
+	// T7
+		
+	// T8
+	// S21 T1 L
+	// T2
+	// T3
+	// T4
+	// T5
 	// T6
 	// T7
 	// T8
-	// S20 T1
+	// T9
+	
+	// end of Bohemian Rhapsody
 	//////////////////////////// XXX Ergaenzen S19 ab T5
 	//////////////////////////// XXX in S21 T7 ganz tiefer ton benoetigt (ton nr. 5).
 
