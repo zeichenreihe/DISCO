@@ -17,12 +17,12 @@
 */
 
 #include <stdio.h>
-//#include <system.h>
+#include <stdlib.h>
 
 int main(int argc, char **argv){
         if( argc == 1 ){
                 printf("NAME\n");
-                printf("        %s - a client program for the Arduino program\n\n", argv[0]);
+                printf("        %s - a client program for DISCO\n\n", argv[0]);
                 printf("SYNOPSYS\n");
                 printf("        %s file [-s]|-l|-n\n", argv[0]);
                 printf("        %s [--help]\n\n", argv[0]);
