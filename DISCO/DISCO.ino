@@ -55,7 +55,7 @@
 	#define SERIAL
 	
 	/// toene eine oktave tiefer 
-	//#define TOENE_TIEFER
+	#define TOENE_TIEFER
 
 	/// servo
 	#define SERVO // NOT WORKING ON P35 ////////////////////////////////////////////// XXX correct servo.h etc.
@@ -141,6 +141,7 @@ void setup(){
 	delay(100);
 	timesignal(4);
 	servo(0);
+	led_blink();
 }
 void loop(){
 	if(digitalRead(tasterpin) == LOW){ // wenn taster gedrueckt
@@ -255,9 +256,7 @@ void servo_toggle(int minpos, int maxpos){ // move servo to other position
 	if(servo_pos == maxpos){ // if on maxpos
 		servo_pos = minpos; // save pos
 		servo_write(minpos);  // goto minpos
-		led1(0);
 	}else{ // else
-		led1(1);
 		servo_pos = maxpos; // save pos
 		servo_write(maxpos); // goto maxpos
 	}
@@ -401,13 +400,45 @@ void led4(int state){if(noleds == false){write_74HC595(4, state);};}
 void led5(int state){if(noleds == false){write_74HC595(5, state);};}
 void led6(int state){if(noleds == false){write_74HC595(6, state);};}
 void led7(int state){if(noleds == false){write_74HC595(7, state);};}
-
+void all_leds(int state){ // function to set all leds
+	led0(state);
+	led1(state);
+	led2(state);
+	led3(state);
+	led4(state);
+	led5(state);
+	led6(state);
+	led7(state);
+}
+void led_blink(){ // blinking leds (for init)
+	led0(1);
+	d(100);
+	led1(1);
+	d(100);
+	led2(1);
+	d(100);
+	led3(1);
+	d(100);
+	led4(1);
+	d(100);
+	led5(1);
+	d(100);
+	led6(1);
+	d(100);
+	led7(1);
+	d(500);
+	all_leds(0);
+	d(500);
+	all_leds(1);
+	d(250);
+	all_leds(0);
+}
 // d() is delay() and nt() is noTone()
 void d(int delaytime){nt(); delay(delaytime);}
 void nt(){noTone(tonepin);}
-
 // tones for the spekaer
 #ifdef TOENE_TIEFER
+void ha   (int waittime){tone(tonepin,  220); delay(waittime);}
 void hh   (int waittime){tone(tonepin,  233); delay(waittime);}
 void ac   (int waittime){tone(tonepin,  261); delay(waittime);}
 void acis (int waittime){tone(tonepin,  277); delay(waittime);}
@@ -435,6 +466,7 @@ void bais (int waittime){tone(tonepin,  923); delay(waittime);}
 void bh   (int waittime){tone(tonepin,  987); delay(waittime);}
 #endif
 #ifndef TOENE_TIEFER
+void ha   (int waittime){tone(toenpin,  440); delay(waittime);}
 void hh   (int waittime){tone(tonepin,  466); delay(waittime);}
 void ac   (int waittime){tone(tonepin,  523); delay(waittime);}
 void acis (int waittime){tone(tonepin,  554); delay(waittime);}
@@ -461,10 +493,10 @@ void ba   (int waittime){tone(tonepin, 1760); delay(waittime);}
 void bais (int waittime){tone(tonepin, 1864); delay(waittime);}
 void bh   (int waittime){tone(tonepin, 1975); delay(waittime);}
 #endif
-
 void leds(){
 	// LED blink with shift register
-	for(int i=0; i<4; i++){ // 42 times
+	for(int i=0; i<4; i++){ // 4 times
+		servo_toggle(-23, 23);
 		led7(1);
 		led6(1);
 		led3(1);
@@ -517,6 +549,7 @@ void leds(){
 		led2(0);
 		led7(1);
 		delay(25);
+		servo_toggle(-23, 23);
 		led1(0);
 		led2(1);
 		led4(1);
@@ -566,15 +599,14 @@ void leds(){
 		delay(50);
 		led2(0);
 	}
-	servo(-35); ///////////////////////////////////////////////////////////// do servo XXX XXX
-	delay(1000); // laesst dem Servomotor Zeit, die Zielposition zu erreichen
+	servo(-35);
+	delay(1000); // servo time to move
 #ifdef SERIAL // menu only needet when serial is needet
 	Serial.println("main();");
 #endif
 }
 
-void song(){
-	// music + leds + servo
+void song(){ // music + leds + servo
 	digitalWrite(onboardled, HIGH);
 
 	/*
@@ -590,7 +622,6 @@ void song(){
 	 *
 	*/
 
-/*
 	// S4 intro T1
 	bais(t_achtel); d(t_neuanschlag);
 	bais(t_achtel); d(t_neuanschlag);
@@ -1724,7 +1755,7 @@ void song(){
 		// T4
 		ah(t_viertel);
 		ag(t_viertel);
-	}*/
+	}
 	if(refrain_play()==0){ // XXX make other voices
 		bd(t_viertel);
 		ag(t_viertel);
@@ -1744,23 +1775,181 @@ void song(){
 		agis(t_halbe);
 		bdis(t_halbe);
 	}
-	// T7
-		
-	// T8
+	if(refrain_play()==0){
+		// T7
+		bgis(t_achtel);
+		bg(t_achtel);
+		bdis(t_achtel);
+		aais(t_achtel); d(t_neuanschlag);
+		aais(t_achtel); d(t_neuanschlag);
+		aais(t_achtel); aais(t_viertel);
+		// T8
+		bg(t_achtel);
+		bf(t_achtel);
+		bdis(t_achtel);
+		bd(t_achtel);
+		aais(t_halbe);
+	}else{
+		// T7
+		d(t_achtel);
+		bc(t_achtel);
+		bg(t_achtel);
+		bc(t_achtel);
+		d(t_achtel);
+		ag(t_achtel);
+		bg(t_achtel);
+		ag(t_achtel);
+		// T8
+		d(t_achtel);
+		bc(t_achtel);
+		bdis(t_achtel);
+		bg(t_achtel);
+		d(t_achtel);
+		ag(t_achtel);
+		aais(t_achtel);
+		bd(t_achtel);
+	}
 	// S21 T1 L
-	// T2
+	if(refrain_play()==0){
+		bg(t_achtel);
+		bdis(t_achtel);
+		bf(t_achtel_t);
+		bg(t_achtel_t);
+		bdis(t_achtel_t);
+		ah(t_halbe);
+		// T2
+		bg(t_achtel);
+		bf(t_achtel); d(t_neuanschlag);
+		bf(t_achtel);
+		bdis(t_achtel); d(t_neuanschlag);
+		bdis(t_achtel);
+		bc(t_viertel);
+		bd(t_achtel);
+	}else{
+		bc(t_achtel); d(t_neuanschlag);
+		bc(t_achtel);
+		bdis(t_achtel);
+		bg(t_achtel);
+		aais(t_halbe);
+		// T2
+		ah(t_ganze);
+	}
 	// T3
+	if(refrain_play()==1){
+		bdis(t_halbe);
+	}else{
+		ag(t_achtel);
+		adis(t_achtel);
+		ag(t_achtel);
+		bc(t_achtel);
+	}
+	if(refrain_play()==0){
+		bc(t_achtel);
+		bd(t_achtel);
+		bc(t_achtel);
+		bd(t_achtel);
+	}else{
+		agis(t_achtel);
+		bd(t_achtel);
+		agis(t_achtel);
+		bd(t_achtel);
+	}
 	// T4
-	// T5
+	if(refrain_play()==0){
+		aais(t_achtel);
+	}else{
+		ag(t_achtel);
+	}
+	adis(t_achtel);
+        ag(t_achtel);
+        aais(t_achtel);
+        if(refrain_play()==0){
+                bc(t_achtel);
+                bd(t_achtel);
+                bc(t_achtel);
+                bd(t_achtel);
+        }else{
+                aa(t_achtel);
+                bd(t_achtel);
+                aa(t_achtel);
+                bd(t_achtel);
+        }
+        // T5
+	if(refrain_play()==0){
+                aais(t_achtel);
+        }else{
+                af(t_achtel);
+        }
+        ad(t_achtel);
+        af(t_achtel);
+        aais(t_achtel);
+        if(refrain_play()==0){
+                d(t_neuanschlag); aais(t_achtel);
+                bc(t_achtel);
+                aais(t_achtel);
+                bc(t_achtel);
+        }else{
+                af(t_achtel);
+                bc(t_achtel);
+                af(t_achtel);
+                bc(t_achtel);
+        }
 	// T6
+	if(refrain_play()==0){
+                ag(t_achtel);
+        }else{
+                ae(t_achtel);
+        }
+        ac(t_achtel);
+        ae(t_achtel);
+        ag(t_achtel);
+        if(refrain_play()==0){
+                aais(t_achtel);
+        }else{
+                ae(t_achtel);
+        }
+        agis(t_achtel); d(t_neuanschlag);
+        agis(t_achtel);
+        ag(t_achtel);
 	// T7
+        if(refrain_play()==0){
+                d(t_neuanschlag);
+                ag(t_achtel);
+        }else{
+                ac(t_achtel);
+        }
+        adis(t_achtel);
+        ac(t_achtel);
+        hh(t_achtel);
+        ha(t_achtel);
+        agis(t_achtel);
+        bf(t_achtel);
+        af(t_achtel);
 	// T8
+        if(refrain_play()==1){
+                aais(t_achtel); d(t_neuanschlag);
+                aais(t_achtel);
+                aa(t_achtel); d(t_neuanschlag);
+                aa(t_achtel);
+                agis(t_viertel);
+                bf(t_viertel);
+        }else{
+                bd(t_achtel);
+                bf(t_achtel);
+                bc(t_achtel);
+                bf(t_achtel);
+                ah(t_achtel);
+                bf(t_achtel);
+                aais(t_achtel);
+        }
 	// T9
-	
+	if(refrain_play()==1){
+		aa(t_ganze);
+	}else{
+		af(t_ganze);
+	}
 	// end of Bohemian Rhapsody
-	//////////////////////////// XXX Ergaenzen S19 ab T5
-	//////////////////////////// XXX in S21 T7 ganz tiefer ton benoetigt (ton nr. 5).
-
+	
 	d(t_halbe); //////////////////////////////// do servo XXX
 	servo(50);
 	digitalWrite(onboardled, LOW);
@@ -1863,8 +2052,15 @@ AUTHORS
         Johannes Schmatz
         Alwin Fronius
 
+BUGS
+	There is no bug in this software, everything you find is a feature.
+	If you find a feature in this software please report it in the file BUGS.txt
+	(create it if it doesn't exists).
+
 SOURCES
         <https://de.wikipedia.org/wiki/Frequenzen_der_gleichstufigen_Stimmung>
+	<https://m.youtube.com/users/Themorpheus407/>
+	<https:// XXX write down where the C++ standart is
         Datei -> Beispiele -> 04. Communication -> ReadASCIIString
         Datei -> Beispiele -> 04. Communication -> ASCIITable
         Datei -> Beispiele -> Servo -> Knob
