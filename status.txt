@@ -1,0 +1,13 @@
+#### STATUS
+# ledstatus in S6 T8
+0 
+1 
+2 1
+3 
+4 
+5 1
+6 
+7 1
+
+
+# servo status in S8 T8
