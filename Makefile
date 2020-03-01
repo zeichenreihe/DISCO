@@ -100,6 +100,11 @@ serial:
 	@echo -n 'please type in your arguments: '
 	@read vars; $(CLIENT_O_FILE) $(PORT) -$$vars
 	
+# convert tabs to spaces
+convert:
+	@./sed_tab_to_space.sh DISCO/DISCO.ino DISCO/DISCO.spaces_not_tab 
+
+
 #	@echo use 'C-a + k' to kill the window \(in screen\)
 #	@read var
 #	@screen $(PORT)
@@ -107,6 +112,8 @@ serial:
 serial-direct:
 	@screen $(PORT)
 
+# XXX
+# change
 pull:
 	git pull git@pixy:/home/public/git/nwt-projekt.git
 
