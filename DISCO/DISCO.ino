@@ -2042,6 +2042,7 @@ void song(){ // music + leds + servo
 		bdis(t_halbe);
 		ah(t_halbe);
 	}
+	servo(62);
 	// T3
 	if(refrain_play()==0){
 		bg(t_halbe); d(t_neuanschlag);
@@ -2052,6 +2053,7 @@ void song(){ // music + leds + servo
 		ah(t_viertel);
 		ag(t_viertel);
 	}
+	servo(34);
 	// T4
 	if(refrain_play()==0){
 		bg(t_viertel);
@@ -2067,6 +2069,7 @@ void song(){ // music + leds + servo
 		agis(t_viertel);
 		adis(t_viertel);
 	}
+	servo(-12);
 	// T5
 	if(refrain_play()==0){
 		afis(t_halbe);
@@ -2075,6 +2078,7 @@ void song(){ // music + leds + servo
 		ad(t_halbe);
 		ag(t_halbe);
 	}
+	servo(-30);
 	// T6
 	if(refrain_play()==0){
 		bc(t_halbe);
@@ -2083,6 +2087,7 @@ void song(){ // music + leds + servo
 		agis(t_halbe);
 		bdis(t_halbe);
 	}
+	servo(57);
 	// T7
 	if(refrain_play()==0){
 		bgis(t_achtel);
@@ -2101,6 +2106,7 @@ void song(){ // music + leds + servo
 		bg(t_achtel);
 		ag(t_achtel);
 	}
+	servo(-29);
 	// T8
 	if(refrain_play()==0){
 		bg(t_achtel);
@@ -2118,6 +2124,7 @@ void song(){ // music + leds + servo
 		aais(t_achtel);
 		bd(t_achtel);
 	}
+	servo(-87);
 	// S21 T1 L
 	if(refrain_play()==0){
 		bg(t_achtel);
@@ -2133,6 +2140,7 @@ void song(){ // music + leds + servo
 		bg(t_achtel);
 		aais(t_halbe);
 	}
+	servo(28);
 	// T2
 	if(refrain_play()==0){
 		bg(t_achtel);
@@ -2145,6 +2153,7 @@ void song(){ // music + leds + servo
 	}else{
 		ah(t_ganze);
 	}
+	servo(64);
 	// T3
 	if(refrain_play()==1){
 		bdis(t_halbe);
@@ -2165,6 +2174,7 @@ void song(){ // music + leds + servo
 		agis(t_achtel);
 		bd(t_achtel);
 	}
+	servo(-20);
 	// T4
 	if(refrain_play()==0){
 		aais(t_achtel);
@@ -2185,6 +2195,7 @@ void song(){ // music + leds + servo
                 aa(t_achtel);
                 bd(t_achtel);
         }
+	servo(5);
         // T5
 	if(refrain_play()==0){
                 aais(t_achtel);
@@ -2205,6 +2216,7 @@ void song(){ // music + leds + servo
                 af(t_achtel);
                 bc(t_achtel);
         }
+	servo(23);
 	// T6
 	if(refrain_play()==0){
                 ag(t_achtel);
@@ -2222,6 +2234,7 @@ void song(){ // music + leds + servo
         agis(t_achtel); d(t_neuanschlag);
         agis(t_achtel);
         ag(t_achtel);
+	servo(6);
 	// T7
         if(refrain_play()==0){
                 d(t_neuanschlag);
@@ -2236,6 +2249,7 @@ void song(){ // music + leds + servo
         agis(t_achtel);
         bf(t_achtel);
         af(t_achtel);
+	servo(9);
 	// T8
         if(refrain_play()==1){
                 aais(t_achtel); d(t_neuanschlag);
