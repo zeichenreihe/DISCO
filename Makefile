@@ -20,7 +20,8 @@
 # <config>
 PORT="/dev/ttyUSB0"
 
-# source files
+## source files
+
 # old varinat
 #FILE="DISCO/DISCO.ino"
 # new variant
@@ -29,18 +30,21 @@ FILE="DISCO"
 CLIENT_FILE="client/main.c"
 CLIENT_O_FILE="output/client"
 
+## compilers
 # C-compiler gcc
 COMPILER="gcc"
 
 # C-compiler cc
 #COMPILER="cc"
 
+## pagers
 # pager less
 PAGER="less"
 
 # pager more
 #PAGER="more"
 
+## editors
 # editor vim
 EDITOR="vim"
 EDITOR_RC_FILE="/home/johannes/.vimrc"
@@ -54,11 +58,11 @@ SYNTAX_ADD_FILE="vimrc_add.txt"
 # </config>
 
 # old variant
-UPLOADER="arduino --upload"
-UPLOADER_UP="--port"
+#UPLOADER="arduino --upload"
+#UPLOADER_UP="--port"
 # nwe variant
-UPLOADER="arduino-cli compile -b ardunio:avr:uno -up"
-UPLOADER_UP="--port
+UPLOADER=arduino-cli compile -b arduino:avr:uno -up
+UPLOADER_UP=""
 
 # make all (upload, installing syntax highlighting, printing the readme, 
 all: install-syntax-highlighting install
@@ -85,7 +89,7 @@ makefile-edit:
 	@$(EDITOR) Makefile
 
 upload:
-	arduino --upload $(FILE) --port $(PORT) 
+	$(UPLOADER) $(PORT) $(UPLOADER_UP) $(FILE) 
 
 install-client:
 	$(COMPILER) -o $(CLIENT_O_FILE) $(CLIENT_FILE)
@@ -100,7 +104,7 @@ client-edit:
 edit: arduino-edit upload-pager
 
 upload-pager:
-	arduino --upload $(FILE) --port $(PORT)  2>&1 | $(PAGER)
+	$(UPLOADER) $(PORT) $(UPLAODER_UP) $(FILE)  2>&1 | $(PAGER)
 
 serial: 
 	@echo Arguments:
