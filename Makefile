@@ -62,7 +62,7 @@ SYNTAX_ADD_FILE="vimrc_add.txt"
 #UPLOADER_UP="--port"
 # nwe variant
 UPLOADER=arduino-cli compile -b arduino:avr:uno -up
-UPLOADER_UP=""
+UPLOADER_UP=
 
 # make all (upload, installing syntax highlighting, printing the readme, 
 all: install-syntax-highlighting install

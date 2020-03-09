@@ -1,3 +1,6 @@
 DISCO/DISCO.spaces_not_tab
 DISCO/DISCO.tab_not_spaces
+DISCO/DISCO.arduino.avr.uno.elf
+DISCO/DISCO.arduino.avr.uno.hex
+DISCO/DISCO.arduino.avr.uno.with_bootloader.hex
 projekt-old.ino
