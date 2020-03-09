@@ -21,7 +21,11 @@
 PORT="/dev/ttyUSB0"
 
 # source files
-FILE="DISCO/DISCO.ino"
+# old varinat
+#FILE="DISCO/DISCO.ino"
+# new variant
+FILE="DISCO"
+
 CLIENT_FILE="client/main.c"
 CLIENT_O_FILE="output/client"
 
@@ -48,6 +52,13 @@ SYNTAX_ADD_FILE="vimrc_add.txt"
 #SYNTAX_ADD_FILE="vimrc_add.txt"
 
 # </config>
+
+# old variant
+UPLOADER="arduino --upload"
+UPLOADER_UP="--port"
+# nwe variant
+UPLOADER="arduino-cli compile -b ardunio:avr:uno -up"
+UPLOADER_UP="--port
 
 # make all (upload, installing syntax highlighting, printing the readme, 
 all: install-syntax-highlighting install
