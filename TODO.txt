@@ -9,8 +9,8 @@
 2 
 3 1
 4 
-5 1
-6 
+5 
+6 1
 7 
 
 # correct all XXX
