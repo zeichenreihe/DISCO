@@ -3,13 +3,14 @@
 # yt: all queen hits 00:45:51 
 
 # ledstatus in S14 T8 end
+# led is S19 T4
 
 0 
 1 1
-2 
+2 1
 3 1
 4 
-5 1
+5 
 6 
 7 
 

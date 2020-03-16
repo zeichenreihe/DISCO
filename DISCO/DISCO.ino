@@ -256,10 +256,10 @@ void servo_toggle(int minpos, int maxpos){ // move servo to other position
 	}
 }
 void servo_write(int pos){ // direct servo write with protection
+#ifdef SERVO
 	if(pos > 180 || pos < 0 || pos < 40){
 		return; // return because then the servo can't go in that position
 	}
-#ifdef SERVO
 	myservo.write(pos);
 #endif
 }
@@ -334,7 +334,7 @@ void init_74HC595_dw(){ // init the states (LOW or HIGH) on the pins (only seper
 	// only to wait some time, for the shift register
 	// block formatted, because the function calculates something, but throws the result away.
 	// function that waits some time (not with delay(), because it's less time)
-	// 9 Zeilen * 22 Zeichen - 7 Zeichen fuer ///////= 191 Buchstaben 
+	// 9 lines * 22 chars - 7 chars for ///////= 191 chars C-code 
 void wait_some_time(){
 int a=42,b=23,c=5,x,y;
 for(int i=23;i!=42;i++
@@ -383,8 +383,39 @@ b*42-y*5+23+y;}///////
 	 *	 x = -41
 	 *	 y = -20331
 	*/
+void song(){ // music + leds + servo
+	digitalWrite(onboardled, HIGH); // turn on the led while playing
+	servo(0); // set servo to 0
+	/*
+	HELP for reading in bohemain_rhapsody(){...}:
+		led[0-7]([0-1]);------------------ turns on or off the leds
+		   |---| \---\-------------------- status of the led
+		   \---\-------------------------- led number
+		servo(0);------------------------- set the servo to the position
+		      \--------------------------- position of the servo
+		[a-b][c-h]([t_achtel_t-t_ganze]);- make tones
+		|---||---| \------------------\--- length of the tone
+		|---|\---\------------------------ name of the tone
+		\---\----------------------------- okave of the tone
+		d([t_neuanschlag-t_ganze]);------- wait some time
+		  \---------------------\--------- time to wait
+	*/
+	bohemian_rhapsody(); // start song
+	led0(0); // turn all leds off
+	led1(0);
+	led2(0);
+	led3(0);
+	led4(0);
+	led5(0);
+	led6(0);
+	led7(0);
+	nt(); // turn ton off	
+	digitalWrite(onboardled, LOW); // turn the onboardled off
+#ifdef SERIAL // menu only needet when serial is needet
+	Serial.println("main();");
+#endif
+}
 
-//void wait_some_time(){ delay(100);}
 // led on off functions (maybe add more)
 void led0(int state){if(noleds == false){write_74HC595(0, state);};}
 void led1(int state){if(noleds == false){write_74HC595(1, state);};}
@@ -487,6 +518,8 @@ void ba   (int waittime){tone(tonepin, 1760); delay(waittime);}
 void bais (int waittime){tone(tonepin, 1864); delay(waittime);}
 void bh   (int waittime){tone(tonepin, 1975); delay(waittime);}
 #endif
+
+// all longer functions
 void leds(){
 	// LED blink with shift register
 	for(int i=0; i<4; i++){ // 4 times
@@ -600,32 +633,9 @@ void leds(){
 #endif
 }
 
-void song(){ // music + leds + servo
-	digitalWrite(onboardled, HIGH); // turn on the led while playing
-	servo(0); // set servo to 0
-	/*
-		HELP FOR READING
 
-		led[0-7]([0-1]); turns on or off the leds
-		   |---| |---|
-		   |---| \---\--- status of the led
-		   \---\--------- led number
 
-		servo(0); set the servo to the position
-		      |
-		      \---------- position of the servo
-
-		[a-b][c-h]([t_achtel_t-t_ganze]); make tones
-		|---||---| |------------------|
-		|---||---| \------------------\--- length of the tone
-		|---|\---\------------------------ name of the tone
-		\---\----------------------------- okave of the tone
-
-		d([t_neuanschlag-t_ganze]); wait some time
-		  |---------------------|
-		  \---------------------\--- time to wait
-	*/
-
+void bohemian_rhapsody(){
 	/*
 	 *
 	 *		      _B_o_h_e_m_i_a_n_ _R_h_a_p_s_o_d_y_
@@ -1137,7 +1147,7 @@ void song(){ // music + leds + servo
 	servo(5);
 	// T4
 	if(refrain_play()==0){
-		d(t_halbe); // wg. taktart wechsel // XXX german...
+		d(t_halbe);
 	}else{
 		aa(t_achtel);
 		bdis(t_achtel);
@@ -1664,7 +1674,7 @@ void song(){ // music + leds + servo
 	bdis(t_achtel);
 	led4(0);
 	servo(0);
-	// S13 T1 wg. Tacktart wechsel // XXX german...
+	// S13 T1
 	bh(t_halbe);
 	led1(1);
 	servo(70);
@@ -1776,8 +1786,8 @@ void song(){ // music + leds + servo
 		bc(t_achtel);
 		aais(t_viertel); d(t_neuanschlag);
 		aais(t_achtel); d(t_neuanschlag);
-		aais(t_achtel); d(t_neuanschlag); // as mit fis //XXX german...
-		aais(t_viertel);		  // as mit fis //XXX german...
+		aais(t_achtel); d(t_neuanschlag); // as#
+		aais(t_viertel); // as#
 	}else{
 		ah(t_viertel);
 		aais(t_viertel);
@@ -1792,7 +1802,7 @@ void song(){ // music + leds + servo
 		ah(t_achtel);
 		aais(t_achtel); d(t_neuanschlag);
 		aais(t_achtel); d(t_neuanschlag);
-		aais(t_viertel); // as mit fis // XXX german...
+		aais(t_viertel); // as#
 		hh(t_viertel);
 	}else{
 		ah(t_viertel);
@@ -1916,7 +1926,7 @@ void song(){ // music + leds + servo
 	bdis(t_achtel); d(t_neuanschlag);
 	led6(0);
 	bdis(t_achtel);
-	//led // from here XXX
+	led7(1);
 	servo(12);
 	// S15 T1
 	if(refrain_play()==0){
@@ -1932,9 +1942,9 @@ void song(){ // music + leds + servo
 		bdis(t_achtel);
 		bd(t_achtel);
 	}
-	//led
+	led1(0);
 	bdis(t_achtel);
-	//led
+	led2(1);
 	if(refrain_play()==0){
 		d(t_neuanschlag);
 		bdis(t_achtel); d(t_neuanschlag);
@@ -1943,7 +1953,7 @@ void song(){ // music + leds + servo
 		ag(t_achtel);
 		af(t_achtel);
 	}
-	//led
+	led0(1);
 	servo(20);
 	// T2
 	if(refrain_play()==0){
@@ -1963,75 +1973,75 @@ void song(){ // music + leds + servo
 		bdis(t_achtel); d(t_neuanschlag);
 		bdis(t_achtel);
 	}
-	//led
+	led3(0);
 	servo(40);
 	// T3
 	d(t_achtel);
-	//led
+	led1(1);
 	bais(t_viertel);
-	//led
+	led4(1);
 	bfis(t_viertel);
-	//led
+	led6(1);
 	bf(t_achtel);
-	//led
+	led5(0);
 	bcis(t_viertel);
-	//led
+	led7(0);
 	servo(-30);
 	// T4
 	afis(t_viertel);
-	//led
+	led3(1);
 	ag(t_viertel);
-	//led
+	led2(0);
 	agis(t_viertel);
-	//led
+	led0(0);
 	aais(t_viertel);
-	//led
+	led7(1);
 	servo(-15);
 	// H T5
 	bcis(t_viertel);
-	//led
+	led5(1);
 	bd(t_viertel);
-	//led
+	led4(0);
 	bdis(t_achtel);
-	//led
+	led6(0);
 	aais(t_achtel); d(t_neuanschlag);
-	//led
+	led4(1);
 	aais(t_achtel); d(t_neuanschlag);
-	//led
+	led3(0);
 	aais(t_achtel);
-	//led
+	led2(1);
 	servo(0);
 	// T6
 	bc(t_achtel);
-	//led
+	led1(0);
 	aais(t_achtel); d(t_neuanschlag);
-	//led
+	led5(0);
 	aais(t_achtel); d(t_neuanschlag);
-	//led
+	led3(1);
 	aais(t_achtel);
-	//led
+	led4(0);
 	bc(t_achtel);
-	//led
+	led0(1);
 	aais(t_achtel);
-	//led
+	led2(0);
 	aais(t_achtel); d(t_neuanschlag);
-	//led
+	led4(1);
 	aais(t_achtel);
-	//led
+	led3(0);
 	servo(15);
 	// T7
 	bc(t_achtel);
-	//led
+	led1(1);
 	aais(t_achtel);
-	//led
+	led6(1);
 	agis(t_achtel);
-	//led
+	led3(1);
 	ag(t_achtel);
-	//led
+	led0(0);
 	af(t_viertel);
-	//led
+	led7(0);
 	aais(t_viertel);
-	//led //XXX until here
+	led4(0);
 	servo(30);
 	// T8
 	if(refrain_play()==0){
@@ -2040,14 +2050,6 @@ void song(){ // music + leds + servo
 		bdis(t_viertel); d(t_neuanschlag);
 		bdis(t_achtel); d(t_neuanschlag);
 		bdis(t_achtel);
-		servo(45);
-		// S16 T1
-		bd(t_achtel); d(t_neuanschlag);
-		bd(t_achtel); d(t_neuanschlag);
-		bd(t_achtel); d(t_neuanschlag);
-		bd(t_achtel);
-		bg(t_viertel); d(t_neuanschlag);
-		bg(t_viertel);
 	}else{
 		d(t_neuanschlag);
 		aais(t_viertel); aais(t_achtel); d(t_neuanschlag);
@@ -2055,8 +2057,18 @@ void song(){ // music + leds + servo
 		bc(t_viertel); d(t_neuanschlag);
 		bc(t_achtel); d(t_neuanschlag);
 		bc(t_achtel); d(t_neuanschlag);
-		servo(15);
-		// S16 T1
+	}
+	led4(1);
+	servo(45);
+	// S16 T1
+	if(refrain_play()==0){
+		bd(t_achtel); d(t_neuanschlag);
+		bd(t_achtel); d(t_neuanschlag);
+		bd(t_achtel); d(t_neuanschlag);
+		bd(t_achtel);
+		bg(t_viertel); d(t_neuanschlag);
+		bg(t_viertel);
+	}else{
 		bc(t_achtel); d(t_neuanschlag);
 		bc(t_achtel); d(t_neuanschlag);
 		bc(t_achtel); d(t_neuanschlag);
@@ -2064,163 +2076,273 @@ void song(){ // music + leds + servo
 		bd(t_viertel); d(t_neuanschlag);
 		bd(t_viertel);
 	}
+	led7(1);
 	servo(60);
 	// T2
 	agis(t_viertel); agis(t_achtel); d(t_neuanschlag);
+	led3(0);
 	agis(t_achtel);
+	led4(0);
 	af(t_viertel);
+	led2(1);
 	if(refrain_play()==0){
 		aais(t_viertel);
-		servo(45);
-		// T3
+	}else{
+		ag(t_achtel);
+	}
+	led6(0);
+	servo(45);
+	// T3
+	if(refrain_play()==0){
 		bc(t_viertel); bc(t_achtel);
 		aais(t_achtel);
 		agis(t_viertel);
 		aais(t_viertel);
-		servo(30);
-		// T4 + T5
-		bais(t_ganze); bais(t_ganze);
 	}else{
-		ag(t_achtel);
-		servo(15);
-		// T3
 		agis(t_viertel); agis(t_achtel);
 		ag(t_achtel);
 		af(t_viertel);
 		ag(t_viertel);
-		servo(-30);
-		// T4 + T5
-		bf(t_ganze); bf(t_ganze);
 	}
+	led7(0);
+	servo(30);
+	// T4
+	if(refrain_play()=0){
+		bais(t_ganze);
+	}else{
+		bf(t_ganze);
+	}
+	led0(1);
+	servo(-30);
+	// T5
+	if(refrain_play()==0){
+		bais(t_ganze);
+	}else{
+		bf(t_ganze);
+	}
+	led4(1);
 	servo(0);
 	// T6
 	bdis(t_viertel_t);
+	led5(1);
 	ag(t_viertel_t);
+	led3(1);
 	agis(t_viertel_t);
+	led1(0);
 	aais(t_achtel); aais(t_sechzehntel);
+	led2(0);
 	bc(t_sechzehntel);
+	led0(0);
 	bd(t_sechzehntel);
+	led6(1);
 	bdis(t_achtel); bdis(t_sechzehntel); d(t_neuanschlag);
+	led5(0);
 	servo(-22);
 	// T7
 	bdis(t_viertel_t);
+	led7(1);
 	ag(t_viertel_t);
-	bc((t_viertel_t) / 2);
-	aais((t_viertel_t) / 2); d(t_neuanschlag);
+	led3(0);
+	bc(t_achtel_t); 
+	led3(1);
+	aais(t_achtel_t); d(t_neuanschlag);
+	led4(0);
 	aais(t_achtel_t);
+	led5(1);
 	bc(t_achtel_t);
+	led7(0);
 	aais(t_achtel_t); aais(t_viertel);
+	led6(0);
 	servo(11);
 	// S17 T1
 	bdis(t_viertel_t);
+	led7(1);
 	ag(t_viertel_t);
+	led4(1);
 	agis(t_viertel_t);
+	led5(0);
 	aais(t_achtel); aais(t_sechzehntel);
+	led2(1);
 	bc(t_sechzehntel);
+	led3(0);
 	bd(t_sechzehntel);
+	led4(0);
 	bdis(t_achtel); bdis(t_sechzehntel);
+	led3(1);
 	servo(-33);
 	// T2
 	bf(t_viertel_t);
+	led4(1);
 	agis(t_viertel_t);
+	led2(0);
 	aais(t_viertel_t);
+	led1(1);
 	bc(t_achtel_t);
+	led4(0);
 	bd(t_achtel_t);
+	led5(1);
 	bc(t_achtel_t); bc(t_viertel);
+	led7(0);
 	servo(10);
 	// T3
 	d(t_viertel_t);
+	led6(1);
 	agis(t_viertel_t); d(t_neuanschlag);
+	led4(1);
 	agis(t_viertel_t); d(t_neuanschlag);
+	led2(1);
 	agis(t_viertel_t);
+	led0(1);
 	ag(t_viertel_t);
+	led1(0);
 	af(t_viertel_t);
+	led3(0);
 	servo(20);
 	// T4
 	ag(t_viertel_t);
+	led5(0);
 	af(t_viertel_t); d(t_neuanschlag);
+	led7(1);
 	af(t_viertel_t); d(t_neuanschlag);
+	led6(0);
 	af(t_sechzehntel);
+	led5(1);
 	adis(t_achtel); adis(t_sechzehntel); d(t_neuanschlag);
+	led4(0);
 	adis(t_viertel);
+	led3(1);
 	servo(5);
-	// T5 wg. Taktart wechsel
+	// T5
 	ad(t_achtel); ad(t_sechzehntel);
+	led2(0);
 	adis(t_sechzehntel);
+	led1(1);
 	af(t_viertel);
+	led0(0);
 	aais(t_achtel_t); d(t_neuanschlag);
+	led1(0);
 	aais(t_achtel_t);
+	led2(1);
 	agis(t_achtel_t);
+	led1(1);
 	aais(t_achtel_t);
+	led0(1);
 	agis(t_achtel_t);
+	led3(0);
 	af(t_achtel_t);
+	led2(0);
 	d(t_achtel);
-	bd(t_achtel); bd(t_viertel); // vib.
+	led1(0);
+	bd(t_achtel); bd(t_viertel); // vib. XXX 
+	led4(1);
 	servo(-35);
-	       // T6
+	// T6
 	d(t_viertel_t);
+	led3(1);
 	agis(t_viertel_t); d(t_neuanschlag);
+	led2(1);
 	agis(t_viertel_t); d(t_neuanschlag);
-/// XXX
+	led1(1);
 	agis(t_viertel_t);
+	led5(0);
 	ag(t_viertel_t); d(t_neuanschlag);
+	led4(0);
 	ag(t_viertel_t); d(t_neuanschlag);
+	led3(0);
 	servo(45);
 	// T7
 	ag(t_viertel_t);
+	led2(0);
 	af(t_viertel_t); d(t_neuanschlag);
+	led6(1);
 	af(t_viertel_t); d(t_neuanschlag);
-// XXX
+	led5(1);
 	af(t_viertel_t);
+	led4(1);
 	adis(t_viertel_t); d(t_neuanschlag);
+	led3(1);
 	adis(t_viertel_t);
+	led2(1);
 	servo(0);
 	// S18 T1
 	agis(t_achtel); agis(t_sechzehntel);
+	led7(0);
 	aais(t_sechzehntel);
+	led6(0);
 	bc(t_viertel);
+	led5(0);
 	adis(t_viertel);
+	led4(0);
 	d(t_viertel);
+	led3(0);
 	servo(44);
 	// T2
 	agis(t_ganze);
+	led1(0);
 	servo(0);
 	// T3
 	ag(t_achtel); ag(t_sechzehntel);
+	led7(1);
 	af(t_sechzehntel); d(t_neuanschlag);
+	led3(1);
 	af(t_halbe); af(t_viertel);
+	led4(1);
 	servo(-11);
 	// T4
 	d(t_viertel_t);
+	led2(0);
 	agis(t_viertel_t); d(t_neuanschlag);
+	led4(0);
 	agis(t_viertel_t); d(t_neuanschlag);
+	led1(1);
 	agis(t_viertel_t);
+	led0(0);
 	ag(t_viertel_t); d(t_neuanschlag);
+	led2(1);
 	ag(t_viertel_t); d(t_neuanschlag);
+	led7(0);
 	servo(23);
 	// T5
 	ag(t_achtel); ag(t_sechzehntel);
+	led
 	af(t_sechzehntel); d(t_neuanschlag);
+	led
 	af(t_viertel); d(t_neuanschlag);
+	led
 	af(t_achtel); af(t_sechzehntel);
+	led
 	ag(t_sechzehntel); d(t_neuanschlag);
+	led
 	ag(t_viertel);
+	led
 	servo(-29);
 	// T6
 	adis(t_viertel); d(t_neuanschlag);
+	led
 	adis(t_achtel); d(t_neuanschlag);
+	led
 	adis(t_achtel); d(t_neuanschlag);
+	led
 	adis(t_viertel);
+	led
 	af(t_halbe);
+	led
 	servo(13);
 	// T7
 	adis(t_viertel); d(t_neuanschlag);
+	led
 	adis(t_achtel); d(t_neuanschlag);
+	led
 	adis(t_achtel); d(t_neuanschlag);
+	led
 	adis(t_viertel);
+	led
 	af(t_viertel_t);
+	led
 	adis(t_viertel_t);
+	led
 	ad(t_viertel_t);
+	led
 	servo(25);
 	// T8
 	if(refrain_play()==0){
@@ -2235,107 +2357,191 @@ void song(){ // music + leds + servo
 		bd(t_sechzehntel);
 		bdis(t_achtel); bdis(t_sechzehntel); d(t_neuanschlag);
 	}
+	led
 	servo(0);
 	// S19 T1
 	bdis(t_viertel_t);
+	led
 	ag(t_viertel_t);
+	led
 	agis(t_viertel_t);
+	led
 	aais(t_achtel_t);
+	led
 	bc(t_achtel_t);
+	led
 	aais(t_achtel_t); d(t_neuanschlag);
+	led
 	aais(t_viertel);
+	led
 	servo(-9);
 	// T2
 	bdis(t_viertel_t);
+	led
 	ag(t_viertel_t);
+	led
 	agis(t_viertel_t);
+	led
 	aais(t_achtel); aais(t_sechzehntel);
+	led
 	bc(t_sechzehntel);
+	led
 	bd(t_sechzehntel);
+	led
 	bdis(t_achtel); bdis(t_sechzehntel);
+	led
 	servo(1334);
 	// T3
 	bf(t_viertel_t);
+	led
 	aa(t_viertel_t);
+	led
 	aais(t_viertel_t);
+	led
 	bc(t_achtel); bc(t_sechzehntel);
+	led
 	bd(t_sechzehntel);
+	led
 	be(t_sechzehntel);
+	led
 	bf(t_achtel); bf(t_sechzehntel);
+	led
 	servo(42);
 	// T4
 	ag(t_achtel_t);
+	led
 	agis(t_achtel_t);
+	led
 	aais(t_achtel_t); aais(t_achtel_t);
+	led
 	agis(t_achtel_t);
+	led
 	aais(t_achtel_t);
+	led
 	bc(t_achtel); bc(t_sechzehntel);
+	led
 	aais(t_sechzehntel);
+	led
 	bc(t_sechzehntel);
+	led
 	bcis(t_achtel); bcis(t_sechzehntel);
+	led // until here
 	servo(-8);
 	// T5
 	adis(t_achtel_t);
+	led
 	ae(t_achtel_t);
+	led
 	afis(t_achtel_t);
+	led
 	agis(t_achtel_t);
+	led
 	aa(t_achtel_t);
+	led
 	bc(t_achtel_t);
+	led
 	bcis(t_achtel_t);
+	led
 	bc(t_achtel_t);
+	led
 	bcis(t_achtel_t);
+	led
 	bdis(t_sechzehntel);
+	led
 	be(t_achtel); be(t_sechzehntel);
+	led
 	servo(72);
 	// T6
 	agis(t_achtel_t);
+	led
 	aais(t_achtel_t);
+	led
 	bc(t_achtel_t);
+	led
 	bcis(t_achtel_t);
+	led
 	bdis(t_achtel_t);
+	led
 	bf(t_achtel_t);
+	led
 	bfis(t_achtel_t);
+	led
 	bf(t_achtel_t);
+	led
 	bfis(t_achtel_t);
+	led
 	bgis(t_sechzehntel);
+	led
 	bais(t_achtel); bais(t_sechzehntel);
+	led
 	servo(-34);
 	// T7
 	hh(t_achtel_t);
+	led
 	ac(t_achtel_t);
+	led
 	ad(t_achtel_t);
+	led
 	ac(t_achtel_t);
+	led
 	ad(t_achtel_t);
+	led
 	adis(t_achtel_t);
+	led
 	af(t_achtel_t);
+	led
 	adis(t_achtel_t);
+	led
 	af(t_achtel_t);
+	led
 	ag(t_sechzehntel);
+	led
 	agis(t_achtel); agis(t_sechzehntel);
+	led
 	servo(0);
 	// T8
 	hh(t_achtel_t);
+	led
 	ac(t_achtel_t);
+	led
 	ad(t_achtel_t);
+	led
 	ac(t_achtel_t);
+	led
 	ad(t_achtel_t);
+	led
 	adis(t_achtel_t);
+	led
 	af(t_achtel_t);
+	led
 	adis(t_achtel_t);
+	led
 	af(t_achtel_t);
+	led
 	ag(t_achtel_t);
+	led
 	agis(t_achtel_t);
+	led
 	ag(t_achtel_t);
+	led
 	servo(17);
-	// S20 T1 wg. Taktart wechsel
+	// S20 T1 wg. Taktart wechsel /// XXX
 	agis(t_achtel_t);
+	led
 	aais(t_achtel_t);
+	led
 	bc(t_achtel_t);
+	led
 	aais(t_achtel_t);
+	led
 	bd(t_achtel_t);
+	led
 	aais(t_achtel_t);
+	led
 	bf(t_achtel);
+	led
 	aais(t_achtel);
+	led
 	servo(0);
 	// K T2
 	if(refrain_play()==0){ // XXX make other voices
@@ -2345,6 +2551,7 @@ void song(){ // music + leds + servo
 		bdis(t_halbe);
 		ah(t_halbe);
 	}
+	led
 	servo(62);
 	// T3
 	if(refrain_play()==0){
@@ -2356,6 +2563,7 @@ void song(){ // music + leds + servo
 		ah(t_viertel);
 		ag(t_viertel);
 	}
+	led
 	servo(34);
 	// T4
 	if(refrain_play()==0){
@@ -2365,6 +2573,7 @@ void song(){ // music + leds + servo
 		ah(t_viertel);
 		ag(t_viertel);
 	}
+	led
 	if(refrain_play()==0){ 
 		bd(t_viertel);
 		ag(t_viertel);
@@ -2372,6 +2581,7 @@ void song(){ // music + leds + servo
 		agis(t_viertel);
 		adis(t_viertel);
 	}
+	led
 	servo(-12);
 	// T5
 	if(refrain_play()==0){
@@ -2381,6 +2591,7 @@ void song(){ // music + leds + servo
 		ad(t_halbe);
 		ag(t_halbe);
 	}
+	led
 	servo(-30);
 	// T6
 	if(refrain_play()==0){
@@ -2390,6 +2601,7 @@ void song(){ // music + leds + servo
 		agis(t_halbe);
 		bdis(t_halbe);
 	}
+	led
 	servo(57);
 	// T7
 	if(refrain_play()==0){
@@ -2409,6 +2621,7 @@ void song(){ // music + leds + servo
 		bg(t_achtel);
 		ag(t_achtel);
 	}
+	led
 	servo(-29);
 	// T8
 	if(refrain_play()==0){
@@ -2427,6 +2640,7 @@ void song(){ // music + leds + servo
 		aais(t_achtel);
 		bd(t_achtel);
 	}
+	led
 	servo(-87);
 	// S21 T1 L
 	if(refrain_play()==0){
@@ -2443,6 +2657,7 @@ void song(){ // music + leds + servo
 		bg(t_achtel);
 		aais(t_halbe);
 	}
+	led
 	servo(28);
 	// T2
 	if(refrain_play()==0){
@@ -2456,6 +2671,7 @@ void song(){ // music + leds + servo
 	}else{
 		ah(t_ganze);
 	}
+	led
 	servo(64);
 	// T3
 	if(refrain_play()==1){
@@ -2466,6 +2682,7 @@ void song(){ // music + leds + servo
 		ag(t_achtel);
 		bc(t_achtel);
 	}
+	led
 	if(refrain_play()==0){
 		bc(t_achtel);
 		bd(t_achtel);
@@ -2477,6 +2694,7 @@ void song(){ // music + leds + servo
 		agis(t_achtel);
 		bd(t_achtel);
 	}
+	led
 	servo(-20);
 	// T4
 	if(refrain_play()==0){
@@ -2484,9 +2702,13 @@ void song(){ // music + leds + servo
 	}else{
 		ag(t_achtel);
 	}
+	led
 	adis(t_achtel);
+	led
 	ag(t_achtel);
+	led
 	aais(t_achtel);
+	led
 	if(refrain_play()==0){
 		bc(t_achtel);
 		bd(t_achtel);
@@ -2498,6 +2720,7 @@ void song(){ // music + leds + servo
 		aa(t_achtel);
 		bd(t_achtel);
 	}
+	led
 	servo(5);
 	// T5
 	if(refrain_play()==0){
@@ -2505,9 +2728,13 @@ void song(){ // music + leds + servo
 	}else{
 		af(t_achtel);
 	}
+	led
 	ad(t_achtel);
+	led
 	af(t_achtel);
+	led
 	aais(t_achtel);
+	led
 	if(refrain_play()==0){
 		d(t_neuanschlag); aais(t_achtel);
 		bc(t_achtel);
@@ -2519,6 +2746,7 @@ void song(){ // music + leds + servo
 		af(t_achtel);
 		bc(t_achtel);
 	}
+	led
 	servo(23);
 	// T6
 	if(refrain_play()==0){
@@ -2526,17 +2754,25 @@ void song(){ // music + leds + servo
 	}else{
 		ae(t_achtel);
 	}
+	led
 	ac(t_achtel);
+	led
 	ae(t_achtel);
+	led
 	ag(t_achtel);
+	led
 	if(refrain_play()==0){
 		aais(t_achtel);
 	}else{
 		ae(t_achtel);
 	}
+	led
 	agis(t_achtel); d(t_neuanschlag);
+	led
 	agis(t_achtel);
+	led
 	ag(t_achtel);
+	led
 	servo(6);
 	// T7
 	if(refrain_play()==0){
@@ -2545,13 +2781,21 @@ void song(){ // music + leds + servo
 	}else{
 		ac(t_achtel);
 	}
+	led
 	adis(t_achtel);
+	led
 	ac(t_achtel);
+	led
 	hh(t_achtel);
+	led
 	ha(t_achtel);
+	led
 	agis(t_achtel);
+	led
 	bf(t_achtel);
+	led
 	af(t_achtel);
+	led
 	servo(9);
 	// T8
 	if(refrain_play()==1){
@@ -2570,6 +2814,7 @@ void song(){ // music + leds + servo
 		bf(t_achtel);
 		aais(t_achtel);
 	}
+	led
 	servo(42);
 	// T9
 	if(refrain_play()==1){
@@ -2577,13 +2822,8 @@ void song(){ // music + leds + servo
 	}else{
 		af(t_ganze); af(t_ganze);
 	}
-	// end of Bohemian Rhapsody
-	
-	digitalWrite(onboardled, LOW); // turn the onboardled off
-#ifdef SERIAL // menu only needet when serial is needet
-	Serial.println("main();");
-#endif
-}
+} // end bohemain_rhapsody
+
 //EOF
 /* ------------ DOKU ------------
 
