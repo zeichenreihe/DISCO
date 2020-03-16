@@ -2298,9 +2298,9 @@ void bohemian_rhapsody(){
 	agis(t_viertel_t);
 	led0(0);
 	ag(t_viertel_t); d(t_neuanschlag);
-	led
+	led2(1);
 	ag(t_viertel_t); d(t_neuanschlag);
-	led
+	led7(0);
 	servo(23);
 	// T5
 	ag(t_achtel); ag(t_sechzehntel);
