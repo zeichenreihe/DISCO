@@ -2304,33 +2304,33 @@ void bohemian_rhapsody(){
 	servo(23);
 	// T5
 	ag(t_achtel); ag(t_sechzehntel);
-	led
+	led3(0);
 	af(t_sechzehntel); d(t_neuanschlag);
-	led
+	led1(0);
 	af(t_viertel); d(t_neuanschlag);
-	led
+	led5(1);
 	af(t_achtel); af(t_sechzehntel);
-	led
+	led2(0);
 	ag(t_sechzehntel); d(t_neuanschlag);
-	led
+	led3(1);
 	ag(t_viertel);
-	led
+	led0(1);
 	servo(-29);
 	// T6
 	adis(t_viertel); d(t_neuanschlag);
-	led
+	led4(1);
 	adis(t_achtel); d(t_neuanschlag);
-	led
+	led5(0);
 	adis(t_achtel); d(t_neuanschlag);
-	led
+	led1(1);
 	adis(t_viertel);
-	led
+	led0(0);
 	af(t_halbe);
-	led
+	led2(1);
 	servo(13);
 	// T7
 	adis(t_viertel); d(t_neuanschlag);
-	led
+	led1(0);
 	adis(t_achtel); d(t_neuanschlag);
 	led
 	adis(t_achtel); d(t_neuanschlag);
