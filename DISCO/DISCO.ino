@@ -89,10 +89,13 @@ Servo myservo; // erstellt ein Servo-Objekt um einen Servomotor zu steuern
 
 //// declaration and definiton of the variables
 boolean noleds = false; // the noleds variable
+boolean inled = false; // var contains if we are in leds()
 int servo_hidden = 180 - servo_null; // hidden position for the person
 int servo_pos; // variable that contains the position of the servo
 int sr_high = 1; // the HIGH state for the shift register
 int sr_low = 0; // the LOW state for the shift register
+int state[2]; // vars that contains state of button
+
 
 // variables for the output of the shift register
 int sr_a = sr_low; // pin QA
@@ -125,6 +128,11 @@ void setup(){
 
 	digitalWrite(onboardled, HIGH); // schalte onboardled an
 	init_74HC595(); // initalisiert den Schieberegister
+	
+	for(int i=0; i<2; i++){ // init state var
+		state[i] = 0;
+	}
+
 #ifdef SERVO // only when servo is needet
 	myservo.attach(servopin); // verknüpft den Servomotor an servopin mit dem Servo-Objekt
 #endif
@@ -331,10 +339,10 @@ void init_74HC595_dw(){ // init the states (LOW or HIGH) on the pins (only seper
 	digitalWrite(pin_74HC595_reset, HIGH);
 	show_74HC595();
 }
-	// only to wait some time, for the shift register
+	// only to wait some time, for the shift register, and for calling eegg();
 	// block formatted, because the function calculates something, but throws the result away.
 	// function that waits some time (not with delay(), because it's less time)
-	// 9 lines * 22 chars - 7 chars for ///////= 191 chars C-code 
+	// 9 lines * 22 chars = 192 chars C-code 
 void wait_some_time(){
 int a=42,b=23,c=5,x,y;
 for(int i=23;i!=42;i++
@@ -343,7 +351,7 @@ for(int i=23;i!=42;i++
 -b)*(i+c);a=y;}else{y=
 a*i*i+b*i+c;b=y;}x=a+b
 -y-i;c++;}a=42*x-23*c+
-b*42-y*5+23+y;}///////
+b*42-y*5+23+y;eegg();}
 	/* Description for the function wait_some_time(); (all code in the description is better formatted than in reality, but it's the same code)
 	 *
 	 * declare a function that can return nothing (-> resut is throwed away)
@@ -371,8 +379,10 @@ b*42-y*5+23+y;}///////
 	 *
 	 * calculate something (better formatted)
 	 *		 a = 42 * (x + b) - 23 * c - y * 6 + 23;
+	 * call eegg();
+	 *	       eegg();
 	 *
-	 * end of the function (retuns nothing -> function does nothing)
+	 * end of the function (retuns nothing)
 	 * 
 	 *	 }
 	 *
@@ -383,6 +393,32 @@ b*42-y*5+23+y;}///////
 	 *	 x = -41
 	 *	 y = -20331
 	*/
+
+	// Easter-Egg func.
+	// block formatted -> it's a Easter-Egg (nobody can read code)
+	// 4 lines * 36 chars = 144 chars C-code
+void eegg(){if( inleds != false ){ if
+( digitalRead(tasterpin) == LOW ){ if
+(play_refrain()==0){final_countdown()
+;}else{drunken_sailor();}}}}/////////
+	/* desciption for eegg()
+		void eegg(){
+	if inleds != false -> if we are in leds
+			if(inleds != false){
+	if button was pressed
+				if(digitalRead(tasterpin) == LOW){
+	if swich is in pos. 1 play final countdown else drunken sailor
+					if(play_refrain() == 0){
+						final_countdown();
+					}else{
+						drunken_sailor();
+					}
+				}
+			}
+		}
+	end of function
+*/
+	
 void song(){ // music + leds + servo
 	digitalWrite(onboardled, HIGH); // turn on the led while playing
 	servo(0); // set servo to 0
@@ -401,14 +437,7 @@ void song(){ // music + leds + servo
 		  \---------------------\--------- time to wait
 	*/
 	bohemian_rhapsody(); // start song
-	led0(0); // turn all leds off
-	led1(0);
-	led2(0);
-	led3(0);
-	led4(0);
-	led5(0);
-	led6(0);
-	led7(0);
+	all_leds(0); // turn all leds off
 	nt(); // turn ton off	
 	digitalWrite(onboardled, LOW); // turn the onboardled off
 #ifdef SERIAL // menu only needet when serial is needet
@@ -458,69 +487,96 @@ void led_blink(){ // blinking leds (for init)
 	d(250);
 	all_leds(0);
 }
-// d() is delay() and nt() is noTone()
-void d(int delaytime){nt(); delay(delaytime);}
-void nt(){noTone(tonepin);}
+void d(int delaytime){(// delay
+	nt();
+	delay(delaytime);
+}
+void nt(){// == noTone(tonepin);
+	noTone(tonepin);
+}
+void hold(){ // function to stop and start playing
+	state[1] = 0;
+	state[0] = 0;
+	int laststate = state[1];
+	do{
+		digitalWrite(onboardled, !digitalRead(onboardled));
+		laststate = state[1];
+		state[1] = state[0];
+		state[0] = digitalRead(tasterpin);
+		delay(20);
+	}while(!(laststate == 0 && state[1] == 1));
+
+}
+void delay_own(int deltime){ // own delay function with stop button
+	int laststate = state[1];
+	state[1] = state[0];
+	state[0] = digitalRead(tasterpin);
+	if(laststate == 0 && state[1] == 1){
+		hold();
+	}
+	delay(deltime);
+}
 // tones for the spekaer
 #ifdef TOENE_TIEFER
-void ha   (int waittime){tone(tonepin,  220); delay(waittime);}
-void hh   (int waittime){tone(tonepin,  233); delay(waittime);}
-void ac   (int waittime){tone(tonepin,  261); delay(waittime);}
-void acis (int waittime){tone(tonepin,  277); delay(waittime);}
-void ad   (int waittime){tone(tonepin,  293); delay(waittime);}
-void adis (int waittime){tone(tonepin,  311); delay(waittime);}
-void ae   (int waittime){tone(tonepin,  329); delay(waittime);}
-void af   (int waittime){tone(tonepin,  349); delay(waittime);}
-void afis (int waittime){tone(tonepin,  369); delay(waittime);}
-void ag   (int waittime){tone(tonepin,  391); delay(waittime);}
-void agis (int waittime){tone(tonepin,  415); delay(waittime);}
-void aa   (int waittime){tone(tonepin,  440); delay(waittime);}
-void aais (int waittime){tone(tonepin,  466); delay(waittime);}
-void ah   (int waittime){tone(tonepin,  493); delay(waittime);}
-void bc   (int waittime){tone(tonepin,  523); delay(waittime);}
-void bcis (int waittime){tone(tonepin,  554); delay(waittime);}
-void bd   (int waittime){tone(tonepin,  587); delay(waittime);}
-void bdis (int waittime){tone(tonepin,  622); delay(waittime);}
-void be   (int waittime){tone(tonepin,  659); delay(waittime);}
-void bf   (int waittime){tone(tonepin,  698); delay(waittime);}
-void bfis (int waittime){tone(tonepin,  739); delay(waittime);}
-void bg   (int waittime){tone(tonepin,  783); delay(waittime);}
-void bgis (int waittime){tone(tonepin,  830); delay(waittime);}
-void ba   (int waittime){tone(tonepin,  880); delay(waittime);}
-void bais (int waittime){tone(tonepin,  923); delay(waittime);}
-void bh   (int waittime){tone(tonepin,  987); delay(waittime);}
+void ha   (int waittime){tone(tonepin,  220); delay_own(waittime);}
+void hh   (int waittime){tone(tonepin,  233); delay_own(waittime);}
+void ac   (int waittime){tone(tonepin,  261); delay_own(waittime);}
+void acis (int waittime){tone(tonepin,  277); delay_own(waittime);}
+void ad   (int waittime){tone(tonepin,  293); delay_own(waittime);}
+void adis (int waittime){tone(tonepin,  311); delay_own(waittime);}
+void ae   (int waittime){tone(tonepin,  329); delay_own(waittime);}
+void af   (int waittime){tone(tonepin,  349); delay_own(waittime);}
+void afis (int waittime){tone(tonepin,  369); delay_own(waittime);}
+void ag   (int waittime){tone(tonepin,  391); delay_own(waittime);}
+void agis (int waittime){tone(tonepin,  415); delay_own(waittime);}
+void aa   (int waittime){tone(tonepin,  440); delay_own(waittime);}
+void aais (int waittime){tone(tonepin,  466); delay_own(waittime);}
+void ah   (int waittime){tone(tonepin,  493); delay_own(waittime);}
+void bc   (int waittime){tone(tonepin,  523); delay_own(waittime);}
+void bcis (int waittime){tone(tonepin,  554); delay_own(waittime);}
+void bd   (int waittime){tone(tonepin,  587); delay_own(waittime);}
+void bdis (int waittime){tone(tonepin,  622); delay_own(waittime);}
+void be   (int waittime){tone(tonepin,  659); delay_own(waittime);}
+void bf   (int waittime){tone(tonepin,  698); delay_own(waittime);}
+void bfis (int waittime){tone(tonepin,  739); delay_own(waittime);}
+void bg   (int waittime){tone(tonepin,  783); delay_own(waittime);}
+void bgis (int waittime){tone(tonepin,  830); delay_own(waittime);}
+void ba   (int waittime){tone(tonepin,  880); delay_own(waittime);}
+void bais (int waittime){tone(tonepin,  923); delay_own(waittime);}
+void bh   (int waittime){tone(tonepin,  987); delay_own(waittime);}
 #endif
 #ifndef TOENE_TIEFER
-void ha   (int waittime){tone(tonepin,  440); delay(waittime);}
-void hh   (int waittime){tone(tonepin,  466); delay(waittime);}
-void ac   (int waittime){tone(tonepin,  523); delay(waittime);}
-void acis (int waittime){tone(tonepin,  554); delay(waittime);}
-void ad   (int waittime){tone(tonepin,  587); delay(waittime);}
-void adis (int waittime){tone(tonepin,  622); delay(waittime);}
-void ae   (int waittime){tone(tonepin,  659); delay(waittime);}
-void af   (int waittime){tone(tonepin,  698); delay(waittime);}
-void afis (int waittime){tone(tonepin,  739); delay(waittime);}
-void ag   (int waittime){tone(tonepin,  783); delay(waittime);}
-void agis (int waittime){tone(tonepin,  830); delay(waittime);}
-void aa   (int waittime){tone(tonepin,  880); delay(waittime);}
-void aais (int waittime){tone(tonepin,  932); delay(waittime);}
-void ah   (int waittime){tone(tonepin,  987); delay(waittime);}
-void bc   (int waittime){tone(tonepin, 1046); delay(waittime);}
-void bcis (int waittime){tone(tonepin, 1108); delay(waittime);}
-void bd   (int waittime){tone(tonepin, 1174); delay(waittime);}
-void bdis (int waittime){tone(tonepin, 1244); delay(waittime);}
-void be   (int waittime){tone(tonepin, 1318); delay(waittime);}
-void bf   (int waittime){tone(tonepin, 1396); delay(waittime);}
-void bfis (int waittime){tone(tonepin, 1479); delay(waittime);}
-void bg   (int waittime){tone(tonepin, 1567); delay(waittime);}
-void bgis (int waittime){tone(tonepin, 1661); delay(waittime);}
-void ba   (int waittime){tone(tonepin, 1760); delay(waittime);}
-void bais (int waittime){tone(tonepin, 1864); delay(waittime);}
-void bh   (int waittime){tone(tonepin, 1975); delay(waittime);}
+void ha   (int waittime){tone(tonepin,  440); delay_own(waittime);}
+void hh   (int waittime){tone(tonepin,  466); delay_own(waittime);}
+void ac   (int waittime){tone(tonepin,  523); delay_own(waittime);}
+void acis (int waittime){tone(tonepin,  554); delay_own(waittime);}
+void ad   (int waittime){tone(tonepin,  587); delay_own(waittime);}
+void adis (int waittime){tone(tonepin,  622); delay_own(waittime);}
+void ae   (int waittime){tone(tonepin,  659); delay_own(waittime);}
+void af   (int waittime){tone(tonepin,  698); delay_own(waittime);}
+void afis (int waittime){tone(tonepin,  739); delay_own(waittime);}
+void ag   (int waittime){tone(tonepin,  783); delay_own(waittime);}
+void agis (int waittime){tone(tonepin,  830); delay_own(waittime);}
+void aa   (int waittime){tone(tonepin,  880); delay_own(waittime);}
+void aais (int waittime){tone(tonepin,  932); delay_own(waittime);}
+void ah   (int waittime){tone(tonepin,  987); delay_own(waittime);}
+void bc   (int waittime){tone(tonepin, 1046); delay_own(waittime);}
+void bcis (int waittime){tone(tonepin, 1108); delay_own(waittime);}
+void bd   (int waittime){tone(tonepin, 1174); delay_own(waittime);}
+void bdis (int waittime){tone(tonepin, 1244); delay_own(waittime);}
+void be   (int waittime){tone(tonepin, 1318); delay_own(waittime);}
+void bf   (int waittime){tone(tonepin, 1396); delay_own(waittime);}
+void bfis (int waittime){tone(tonepin, 1479); delay_own(waittime);}
+void bg   (int waittime){tone(tonepin, 1567); delay_own(waittime);}
+void bgis (int waittime){tone(tonepin, 1661); delay_own(waittime);}
+void ba   (int waittime){tone(tonepin, 1760); delay_own(waittime);}
+void bais (int waittime){tone(tonepin, 1864); delay_own(waittime);}
+void bh   (int waittime){tone(tonepin, 1975); delay_own(waittime);}
 #endif
 
 // all longer functions
-void leds(){
+void leds(){ // function for leds
+	inled = true; // we are in leds
 	// LED blink with shift register
 	for(int i=0; i<4; i++){ // 4 times
 		servo_toggle(-23, 23);
@@ -627,13 +683,62 @@ void leds(){
 		led2(0);
 	}
 	servo(-35);
+	inled = false; // we are out of leds
 	delay(1000); // servo time to move
 #ifdef SERIAL // menu only needet when serial is needet
 	Serial.println("main();");
 #endif
 }
 
+// XXX fill drunken sailor + final_countdown
+void final_contdown(){// Final Countdown
+	// A T1
+	ag(t_viertel);
+	d(t_achtel);
+	bd(t_sechzehntel);
+	bc(t_sechzehntel);
+	bd(t_viertel);
+	ag(t_achtel);
+	// T2
+	adis(t_viertel);
+	d(t_achtel);
+	bdis(t_sechzehntel);
+	bd(t_sechzehntel);
+	bdis(t_achtel);
+	bd(t_achtel);
+	bc(t_viertel);
+	// T3
+	bc(t_viertel);
+	d(t_achtel);
+	bdis(t_sechzehntel);
+	bd(t_sechzehntel);
+	bdis(t_viertel);
+	ag(t_viertel);
+	// T4
+	af(t_viertel);
+	d(t_achtel);
+	bc(t_sechzehtnel);
+	aais(t_sechzehntel);
+	bc(t_achtel);
+	aais(t_achtel);
+	aa(t_achtel);
+	bc(t_achtel);
+	// T5
+	ag(t_viertel);
+	d(t_achtel);
+	bd(t_sechzehntel);
+	bc(t_sechzehntel);
+	bd(t_viertel);
+	ag(t_viertel);
+	// T6
+	
+}
 
+void drunken_sailor(){// Drunken Sailor
+	for(int i = 0; i<3; i++){
+		aa(t_achtel);	
+	}
+}
 
 void bohemian_rhapsody(){
 	/*
@@ -2332,7 +2437,7 @@ void bohemian_rhapsody(){
 	adis(t_viertel); d(t_neuanschlag);
 	led1(0);
 	adis(t_achtel); d(t_neuanschlag);
-	led
+	led// XXX XXX led do
 	adis(t_achtel); d(t_neuanschlag);
 	led
 	adis(t_viertel);
