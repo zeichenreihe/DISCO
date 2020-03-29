@@ -18,6 +18,7 @@
 ////// README:
 ////// DOKU am Ende der Datei
 ////// Quellen in der DOKU
+////// XXX = TODO = not so good
 ////// Bitte konfigurieren! (in '<config>[...]</config>')
 // <config>
 	//// pins definieren  
@@ -690,8 +691,21 @@ void leds(){ // function for leds
 #endif
 }
 
-// XXX fill drunken sailor + final_countdown
+// XXX fill final countdown
 void final_contdown(){// Final Countdown
+	/*
+	 *  _T_H_E_ _F_I_N_A_L_ _C_O_U_N_T_D_O_W_N_
+	 *
+	 *  Words & Music by JOEY TEMPEST
+	 *
+	 * (c) 1986 by EMI Music Publishing Ltd. /
+	 * Rechte für Deutschland, Österreich, Schweiz
+	 * EMI Music Publishing Germany GmbH, Hamburg
+	 *
+	 * digitalsheetmusic.en
+	 * The Final Countdown
+	 *
+	 */
 	// A T1
 	ag(t_viertel);
 	d(t_achtel);
@@ -734,9 +748,62 @@ void final_contdown(){// Final Countdown
 	
 }
 
+// XXX fill Drunken sailor
 void drunken_sailor(){// Drunken Sailor
+	/*
+	 * _W_H_A_T_ _S_H_A_L_L_ _W_E_ _D_O_ _W_I_T_H_ _A_ D_R_U_N_K_E_N_ _S_A_I_L_O_R_
+	 * Piano arrangemant: Jan Kolácek | Sheet music: www.EasyPiano.cz
+	 *
+	 * www.EasyPiano.cz
+	 *
+	 */
 	for(int i = 0; i<3; i++){
-		aa(t_achtel);	
+		// T1
+		aa(t_viertel); d(t_neuanschlag);
+		aa(t_achtel); d(t_neuanschlag);
+		aa(t_achtel); d(t_neuanschlag);
+		aa(t_viertel); d(t_neuanschlag);
+		aa(t_achtel); d(t_neuanschlag);
+		aa(t_achtel); d(t_neuanschlag);
+		// T2
+		aa(t_viertel);
+		ad(t_viertel);
+		af(t_viertel);
+		aa(t_viertel);
+		// T3
+		ag(t_viertel); d(t_neuanschlag);
+		ag(t_achtel); d(t_neuanschlag);
+		ag(t_achtel); d(t_neuanschlag);
+		ag(t_viertel); d(t_neuanschlag);
+		ag(t_achtel); d(t_neuanschlag);
+		ag(t_achtel); d(t_neuanschlag);
+		// T4
+		ag(t_viertel);
+		ac(t_viertel);
+		ae(t_viertel);
+		ag(t_viertel);
+		// T5
+		aa(t_viertel); d(t_neuanschlag);
+		aa(t_achtel); d(t_neuanschlag);
+		aa(t_achtel); d(t_neuanschlag);
+		aa(t_viertel); d(t_neuanschlag);
+		aa(t_achtel); d(t_neuasnchlag);
+		aa(t_achtel); d(t_neuanschlag);
+		// T6
+		aa(t_viertel);
+		ah(t_viertel);
+		bc(t_viertel);
+		bd(t_viertel);
+		// T7
+		bc(t_viertel); bc(t_achtel);
+		aa(t_achtel);
+		ag(t_viertel);
+		ae(t_viertel);
+		// T8
+		ad(t_halbe); d(t_neuanschlag);
+		ad(t_halbe);
+		// T9
+		
 	}
 }
 
