@@ -1,17 +1,18 @@
 #### TODO
 
-# yt: all queen hits 00:45:51 
+# music
+music_dir_queen
+music -r
 
-# ledstatus in S14 T8 end
-# led is S19 T4
-
+# led finished
+# led is S21 T9 (END)
 0 
 1 
 2 1
-3 1
+3 
 4 1
 5 
-6 
+6 1
 7 
 
 # correct all XXX
