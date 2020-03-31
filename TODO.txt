@@ -1,23 +1,61 @@
-#### TODO
+//TODO - file
 
-# music
-music_dir_queen
-music -r
+#include <stdlib.h>
+#include <stdio.h>
 
-# led finished
-# led is S21 T9 (END)
-0 
-1 
-2 1
-3 
-4 1
-5 
-6 1
-7 
+#define FINISH 0
+#define TODO 1
 
-# correct all XXX
+int music_hear(){
+	//system("bash -c 'music_dir_queen; music -r'");
 
-# add Drunken sailor
-# add Final Countdown
+	printf("STATE: music_hear:\tFINISH\n\n");
+	return FINISH;
+}
 
-# servo finish
+int led(){
+	printf("pos: BR S21 T9 (END)\n");
+	printf("0	\n");
+	printf("1	\n");
+	printf("2 1	\n");
+	printf("3	\n");
+	printf("4 1	\n");
+	printf("5	\n");
+	printf("6 1	\n");
+	printf("7	\n");
+
+	printf("STATE: led:\tFINISH\n\n");
+	return FINISH;
+}
+
+int XXX(){
+	printf("correct all XXX\n");
+
+	printf("STATE: XXX:\tTODO\n\n");
+	return TODO;
+}
+
+int music(){
+	printf("finished: Bohemain Rhapsody\n");
+	printf("add: What Shall We Do With A Drunken Sailor\n");
+	printf("add: The Final Countdown\n");
+
+	printf("STATE: music:\tTODO\n\n");
+	return TODO;
+}
+
+int servo(){
+	printf("STATE: servo:\tFINISH\n");
+	return FINISH;
+}
+
+int main(){
+	music_hear();
+	led();
+	XXX();
+	music();
+	servo();
+}
+
+// syntax
+// vim: ts=8 sts=8 sw=8 noet si syntax=c
