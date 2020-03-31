@@ -3110,4 +3110,4 @@ SOURCES
 */
 //DOKUEOF
 //// syntax for some text editors
-// vim: ts=8 sw=8 syntax=arduino
+// vim: ts=8 sts=8 sw=8 noet si syntax=arduino
