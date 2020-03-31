@@ -398,9 +398,9 @@ b*42-y*5+23+y;eegg();}
 	// Easter-Egg func.
 	// block formatted -> it's a Easter-Egg (nobody can read code)
 	// 4 lines * 36 chars = 144 chars C-code
-void eegg(){if( inleds != false ){ if
+void eegg(){ if( inled != false ){ if
 ( digitalRead(tasterpin) == LOW ){ if
-(play_refrain()==0){final_countdown()
+(refrain_play()==0){final_countdown()
 ;}else{drunken_sailor();}}}}/////////
 	/* desciption for eegg()
 		void eegg(){
@@ -488,7 +488,7 @@ void led_blink(){ // blinking leds (for init)
 	d(250);
 	all_leds(0);
 }
-void d(int delaytime){(// delay
+void d(int delaytime){// delay
 	nt();
 	delay(delaytime);
 }
@@ -691,7 +691,7 @@ void leds(){ // function for leds
 #endif
 }
 
-void final_contdown(){
+void final_countdown(){
 	/*
 	 *  _T_H_E_ _F_I_N_A_L_ _C_O_U_N_T_D_O_W_N_
 	 *
@@ -730,7 +730,7 @@ void final_contdown(){
 	// T4
 	af(t_viertel);
 	d(t_achtel);
-	bc(t_sechzehtnel);
+	bc(t_sechzehntel);
 	aais(t_sechzehntel);
 	bc(t_achtel);
 	aais(t_achtel);
@@ -761,7 +761,7 @@ void final_contdown(){
 	// T8
 	af(t_viertel);
 	d(t_achtel);
-	bc(t_sechzehtnel);
+	bc(t_sechzehntel);
 	aais(t_sechzehntel);
 	bc(t_achtel);
 	aais(t_achtel);
@@ -770,9 +770,9 @@ void final_contdown(){
 	// T9
 	aais(t_viertel); aais(t_achtel);
 	aa(t_sechzehntel);
-	aais(t_sechzehtnel);
+	aais(t_sechzehntel);
 	bc(t_viertel); bc(t_achtel);
-	aais(t_sechzehtnel);
+	aais(t_sechzehntel);
 	bc(t_sechzehntel);
 	// T10 L3
 	bd(t_achtel);
@@ -784,8 +784,8 @@ void final_contdown(){
 	// T11
 	bd(t_halbe); bd(t_viertel); d(t_neuanschlag);
 	bd(t_sechzehntel);
-	bdis(t_sechzehtnel);
-	bd(t_sechzehtnel);
+	bdis(t_sechzehntel);
+	bd(t_sechzehntel);
 	bc(t_sechzehntel);
 	// T12
 	bd(t_ganze);
@@ -830,7 +830,7 @@ void drunken_sailor(){
 		aa(t_achtel); d(t_neuanschlag);
 		aa(t_achtel); d(t_neuanschlag);
 		aa(t_viertel); d(t_neuanschlag);
-		aa(t_achtel); d(t_neuasnchlag);
+		aa(t_achtel); d(t_neuanschlag);
 		aa(t_achtel); d(t_neuanschlag);
 		// T6
 		aa(t_viertel);
@@ -2356,7 +2356,7 @@ void bohemian_rhapsody(){
 	led7(0);
 	servo(30);
 	// T4
-	if(refrain_play()=0){
+	if(refrain_play()==0){
 		bais(t_ganze);
 	}else{
 		bf(t_ganze);
@@ -2482,7 +2482,7 @@ void bohemian_rhapsody(){
 	led2(0);
 	d(t_achtel);
 	led1(0);
-	bd(t_achtel); bd(t_viertel); // vib. XXX 
+	bd(t_achtel); bd(t_viertel);
 	led4(1);
 	servo(-35);
 	// T6
