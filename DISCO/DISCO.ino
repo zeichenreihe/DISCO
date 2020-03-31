@@ -691,8 +691,7 @@ void leds(){ // function for leds
 #endif
 }
 
-// XXX fill final countdown
-void final_contdown(){// Final Countdown
+void final_contdown(){
 	/*
 	 *  _T_H_E_ _F_I_N_A_L_ _C_O_U_N_T_D_O_W_N_
 	 *
@@ -706,7 +705,7 @@ void final_contdown(){// Final Countdown
 	 * The Final Countdown
 	 *
 	 */
-	// A T1
+	// A T1 L1
 	ag(t_viertel);
 	d(t_achtel);
 	bd(t_sechzehntel);
@@ -737,7 +736,7 @@ void final_contdown(){// Final Countdown
 	aais(t_achtel);
 	aa(t_achtel);
 	bc(t_achtel);
-	// T5
+	// T5 L2
 	ag(t_viertel);
 	d(t_achtel);
 	bd(t_sechzehntel);
@@ -745,11 +744,55 @@ void final_contdown(){// Final Countdown
 	bd(t_viertel);
 	ag(t_viertel);
 	// T6
-	
+	adis(t_viertel);
+	d(t_achtel);
+	bdis(t_sechzehntel);
+	bd(t_sechzehntel);
+	bdis(t_achtel);
+	bd(t_achtel);
+	bc(t_viertel);
+	// T7
+	bc(t_viertel);
+	d(t_achtel);
+	bdis(t_sechzehntel);
+	bd(t_sechzehntel);
+	bdis(t_viertel);
+	ag(t_viertel);
+	// T8
+	af(t_viertel);
+	d(t_achtel);
+	bc(t_sechzehtnel);
+	aais(t_sechzehntel);
+	bc(t_achtel);
+	aais(t_achtel);
+	aa(t_achtel);
+	bc(t_achtel);
+	// T9
+	aais(t_viertel); aais(t_achtel);
+	aa(t_sechzehntel);
+	aais(t_sechzehtnel);
+	bc(t_viertel); bc(t_achtel);
+	aais(t_sechzehtnel);
+	bc(t_sechzehntel);
+	// T10 L3
+	bd(t_achtel);
+	bc(t_achtel);
+	aais(t_achtel);
+	aa(t_achtel);
+	ag(t_viertel);
+	bdis(t_viertel);
+	// T11
+	bd(t_halbe); bd(t_viertel); d(t_neuanschlag);
+	bd(t_sechzehntel);
+	bdis(t_sechzehtnel);
+	bd(t_sechzehtnel);
+	bc(t_sechzehntel);
+	// T12
+	bd(t_ganze);
+	// end of The Final Countdown (tmp?)
 }
 
-// XXX fill Drunken sailor
-void drunken_sailor(){// Drunken Sailor
+void drunken_sailor(){
 	/*
 	 * _W_H_A_T_ _S_H_A_L_L_ _W_E_ _D_O_ _W_I_T_H_ _A_ D_R_U_N_K_E_N_ _S_A_I_L_O_R_
 	 * Piano arrangemant: Jan Kolácek | Sheet music: www.EasyPiano.cz
@@ -803,7 +846,41 @@ void drunken_sailor(){// Drunken Sailor
 		ad(t_halbe); d(t_neuanschlag);
 		ad(t_halbe);
 		// T9
-		
+		aa(t_halbe); d(t_neuanschlag);
+		aa(t_viertel); aa(t_achtel); d(t_neuanschlag);
+		aa(t_achtel); d(t_neuanschlag);
+		// T10
+		aa(t_viertel);
+		ad(t_viertel);
+		af(t_viertel);
+		aa(t_viertel);
+		// T11
+		ag(t_halbe); d(t_neuanschlag);
+		ag(t_viertel); aa(t_achtel); d(t_neuanschlag);
+		ag(t_achtel); d(t_neuanschlag);
+		// T12
+		ag(t_viertel);
+		ac(t_viertel);
+		ae(t_viertel);
+		ag(t_viertel);
+		// T13
+		aa(t_halbe); d(t_neuanschlag);
+		aa(t_viertel); aa(t_achtel); d(t_neuanschlag);
+		aa(t_achtel); d(t_neuanschlag);
+		// T14
+		aa(t_viertel);
+		ah(t_viertel);
+		bc(t_viertel);
+		bd(t_viertel);
+		// T15
+		bc(t_viertel); bc(t_achtel);
+		aa(t_achtel);
+		ag(t_viertel);
+		ae(t_viertel);
+		// T16
+		ad(t_halbe); d(t_neuanschlag);
+		ad(t_halbe);
+		// end of What Shall We Do With A Drunken Sailor
 	}
 }
 
@@ -2996,8 +3073,8 @@ void bohemian_rhapsody(){
 	}else{
 		af(t_ganze); af(t_ganze);
 	}
-} // end bohemain_rhapsody
-
+	// end of Bohemian Rhapsody
+}
 //EOF
 /* ------------ DOKU ------------
 
@@ -3005,7 +3082,7 @@ NAME
 	DISCO - ein Programm mit Musik, blinkenden LEDs und vielem mehr
 
 DESCRIPTION
-	Ein Programm fuer Arduino, das Musik spielen und LEDs blinken lassen kann.
+	Ein Programm für Arduinomit Easter-Egmit Easter-Egg, das Musik spielen und LEDs blinken lassen kann.
 
 OPTIONS
 	Man kann folgende Optionen im <config> Berich aktivieren (auskommentieren):
@@ -3019,7 +3096,7 @@ OPTIONS
 			2       aktiviert nur die Musik
 			
 	 #define TOENE_TIEFER
-		spielt alle Toene eine Oktave tiefer, damit die Toene nicht so 
+		spielt alle Töne eine Oktave tiefer, damit die Toene nicht so 
 		peipsig sind.
 
 	 #define SERVO
