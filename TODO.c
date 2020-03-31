@@ -38,11 +38,11 @@ int XXX(){
 
 int music(){
 	printf("finished: Bohemain Rhapsody\n");
-	printf("add: What Shall We Do With A Drunken Sailor\n");
-	printf("add: The Final Countdown\n");
+	printf("finished: What Shall We Do With A Drunken Sailor\n");
+	printf("finished: The Final Countdown\n");
 
-	printf("STATE: music:\tTODO\n\n");
-	return TODO;
+	printf("STATE: music:\tFINISHED\n\n");
+	return FINISH;
 }
 
 int servo(){
