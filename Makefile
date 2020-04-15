@@ -1,4 +1,3 @@
-#
 #    Makefile for the Arduino programm for NWT
 #    Copyright (C) 2020  Johannes Schmatz
 #
