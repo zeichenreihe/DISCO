@@ -49,6 +49,10 @@ int servo(){
 	printf("STATE: servo:\tFINISH\n");
 	return FINISH;
 }
+int guitarr(){
+	printf("E T4");
+	return TODO;
+}
 
 int main(){
 	music_hear();
@@ -56,6 +60,7 @@ int main(){
 	XXX();
 	music();
 	servo();
+	guitarr();
 }
 
 // syntax
