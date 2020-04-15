@@ -118,6 +118,8 @@ int t_achtel_t; // achtel triolen
 int t_sechzehntel;
 int t_sechzehntel_t; // sechzehntel triolen
 int t_zweisechzehntel;
+int t_viersechzehntel;
+
 
 //// all functions
 void setup(){
@@ -227,6 +229,7 @@ void set_tones(){ // function that sets the lenght of tones
 	t_sechzehntel = 205;
 	t_sechzehntel_t = 136;
 	t_zweisechzehntel = 102;
+	t_viersechzehntel = 51
 #endif
 #ifndef HARDCODED_LENGHT // calculate the lenght of tones
 	t_viertel = 60000 / ( schlaege_pro_min * speed );
@@ -238,6 +241,7 @@ void set_tones(){ // function that sets the lenght of tones
 	t_sechzehntel = t_viertel / 4;
 	t_sechzehntel_t = t_viertel / 6;
 	t_zweisechzehntel = t_viertel / 8;
+	t_viersechzehntel = t_sechzehntel / 2;
 #endif
 }
 void servo(int pos){ // Servo write with servo(pos); (pos is relative to 90° or up), but only if servo is needet
@@ -1599,7 +1603,8 @@ void bohemian_rhapsody(){
 	bg(t_viertel);
 	led0(0);
 	if(refrain_play() == 0){
-		d(t_halbe);
+		aais(t_viertel); bais(t_achtel);
+		ag(t_achtel);
 	}else{
 		aais(t_achtel);
 		ad(t_achtel);
@@ -1610,7 +1615,15 @@ void bohemian_rhapsody(){
 	servo(60);
 	// T4
 	if(refrain_play()==0){
-		d(t_ganze);
+		aais(t_achtel);
+		bc(t_viertel); bc(t_achtel);
+		d(t_neuanschlag);
+		bc(t_achtel);
+		bd(t_sechzehntel);
+		bdis(t_sechzehntel);
+		bc(t_achtel);
+		bd(t_sechzehntel);
+		bdis(t_sechzehntel);
 	}else{
 		adis(t_achtel);
 		ac(t_achtel);
@@ -1625,8 +1638,13 @@ void bohemian_rhapsody(){
 	servo(50);
 	// T5
 	if(refrain_play()==0){
-		d(t_ganze);
-		servo(40);
+		bf(t_viertel); bf(t_achtel); bf(t_sechzehntel);
+		ac(t_sechzehntel);
+		af(t_sechzehntel);
+		ag(t_sechzehntel);
+		agis(t_sechzehntel);
+		aais(t_sechzehntel);
+		bc(t_viertel);
 	}else{
 		agis(t_achtel);
 		af(t_achtel);
@@ -1637,10 +1655,36 @@ void bohemian_rhapsody(){
 		bc(t_achtel);
 		ad(t_achtel);
 	}
+	servo(40);
 	led7(0);
 	// T6
 	if(refrain_play()==0){
-		d(t_ganze);
+		// t_zweisechzehntel t_viersechzehntel
+		bais(t_sechzehntel);
+		bgis(t_sechzehntel);
+		bg(t_zweisechzehntel);
+		bgis(t_zweisechzehntel);
+		bg(t_viersechzehntel);
+		bgis(t_viersechzehntel);
+		bg(t_viersechzehntel);
+		bf(t_viersechzehntel);
+
+		bg(t_sechzehntel);
+		bf(t_sechzehntel);
+		bdis(t_sechzehntel);
+		bd(t_sechzehntel);
+		bdis(t_sechzehntel);
+
+		bd(t_zweisechzehntel);
+		bdis(t_zweisechzehntel);
+		bd(t_zweisechzehntel);
+		bc(t_zweisechzehntel);
+
+		bd(t_sechzehntel_t);
+		bc(t_sechzehntel_t);
+		aais(t_sechzehntel_t);
+
+		aais(t_viertel);
 	}else{
 		bais(t_achtel);
 		ag(t_sechzehntel); d(t_neuanschlag);
@@ -1659,7 +1703,7 @@ void bohemian_rhapsody(){
 	servo(30);
 	// T7
 	if(refrain_play()==0){
-		d(t_ganze);
+		// XXX
 	}else{
 		d(t_achtel);
 		adis(t_achtel);
