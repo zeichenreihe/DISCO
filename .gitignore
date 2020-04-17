@@ -1,5 +1,5 @@
-DISCO/DISCO.spaces_not_tab
-DISCO/DISCO.tab_not_spaces
+DISCO/DISCO.spaces_not_tab.ino
+DISCO/DISCO.tab_not_spaces.ino
 DISCO/DISCO.arduino.avr.uno.elf
 DISCO/DISCO.arduino.avr.uno.hex
 DISCO/DISCO.arduino.avr.uno.with_bootloader.hex
