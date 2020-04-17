@@ -46,7 +46,7 @@ PAGER="less"
 ## editors
 # editor vim
 EDITOR="vim"
-EDITOR_RC_FILE="/home/johannes/.vimrc"
+EDITOR_RC_FILE="~/.vimrc"
 SYNTAX_ADD_FILE="vimrc_add.txt"
 
 # editor nano
@@ -56,22 +56,26 @@ SYNTAX_ADD_FILE="vimrc_add.txt"
 
 # </config>
 
-# old variant
+# old variant with arduino
 #UPLOADER="arduino --upload"
 #UPLOADER_UP="--port"
-# nwe variant
+
+# new variant with arduino-cli
 UPLOADER=arduino-cli compile -b arduino:avr:uno -up
 UPLOADER_UP=
 
 # make all (upload, installing syntax highlighting, printing the readme, 
 all: install-syntax-highlighting install
 
+# install vim syntax highlithing for .ino files
 install-syntax-highlighting:
 	bash -c 'grep -v // $(SYNTAX_ADD_FILE) >> $(EDITOR_RC_FILE)'
 
+# make config, upload and compile the client software
 install: config upload install-client
 	@echo Done.
 
+# config the makefile before install
 config: makefile-edit
 	@echo Please config the Makefile first, then the programm will be
 	@echo compiled and uploaded to the Arduino, on the port, that you 
@@ -84,28 +88,36 @@ config: makefile-edit
 	@echo This programm and its components are Free Software under GPLv3.
 	@read var
 
+# edit the makefile
 makefile-edit:
 	@$(EDITOR) Makefile
 
+# upload the programm
 upload:
 	$(UPLOADER) $(PORT) $(UPLOADER_UP) $(FILE) 
 
+# compile the client
 install-client:
 	$(COMPILER) -o $(CLIENT_O_FILE) $(CLIENT_FILE)
 
+# edit the arduino file
 arduino-edit:
 	@$(EDITOR) $(FILE)
 
+# edit the cilent software
 client-edit:
 	@$(EDITOR) $(CLIENT_FILE)
 	$(COMPILER) -o $(CLIENT_O_FILE) $(CLIENT_FILE)
 
+# edit first the arduino file, then upload (for testing)
 edit: arduino-edit upload-pager
 
+# upload with pager to read all warnings etc.
 upload-pager:
 	$(UPLOADER) $(PORT) $(UPLAODER_UP) $(FILE)  2>&1 | $(PAGER)
 
-serial: 
+# control with serial connection
+serial: install-client
 	@echo Arguments:
 	@echo ' s - song'
 	@echo ' l - leds'
@@ -119,10 +131,9 @@ convert:
 	@./sed_tab_to_space.sh DISCO/DISCO.ino DISCO/DISCO.spaces_not_tab.ino.other
 	@./sed_space_to_tab.sh DISCO/DISCO.ino DISCO/DISCO.tab_not_spaces.ino.other
 
-
+# access the serial connection direct
+serial-direct:
+	@screen $(PORT)
 #	@echo use 'C-a + k' to kill the window \(in screen\)
 #	@read var
 #	@screen $(PORT)
-
-serial-direct:
-	@screen $(PORT)
