@@ -2885,11 +2885,10 @@ void bohemian_rhapsody(){
 	led7(0);
 	servo(0);
 	// K T2
-	if(refrain_play()==0){ // XXX make other voices
+	if(refrain_play()==0){
 		bg(t_halbe);
 		bgis(t_halbe);
 	}else{
-		// XXX always in else if ==0
 		d(t_sechzehntel);
 		hh(t_sechzehntel);
 		adis(t_sechzehntel);
@@ -2948,7 +2947,7 @@ void bohemian_rhapsody(){
 		ag(t_achtel);
 		agis(t_achtel);
 		aais(t_viertel) aais(t_achtel);
-		d(t_neuanshclag);
+		d(t_neuanschlag);
 		aais(t_achtel);
 	}
 	led5(0);

@@ -32,8 +32,8 @@ int led(){
 int XXX(){
 	printf("correct all XXX\n");
 
-	printf("STATE: XXX:\tTODO\n\n");
-	return TODO;
+	printf("STATE: XXX:\tFINISHED\n\n");
+	return FINISH;
 }
 
 int music(){
