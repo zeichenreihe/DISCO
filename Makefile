@@ -116,8 +116,8 @@ serial:
 	
 # convert tabs to spaces
 convert:
-	@./sed_tab_to_space.sh DISCO/DISCO.ino DISCO/DISCO.spaces_not_tab 
-	@./sed_space_to_tab.sh DISCO/DISCO.ino DISCO/DISCO.tab_not_spaces
+	@./sed_tab_to_space.sh DISCO/DISCO.ino DISCO/DISCO.spaces_not_tab.ino
+	@./sed_space_to_tab.sh DISCO/DISCO.ino DISCO/DISCO.tab_not_spaces.ino
 
 
 #	@echo use 'C-a + k' to kill the window \(in screen\)
@@ -126,11 +126,3 @@ convert:
 
 serial-direct:
 	@screen $(PORT)
-
-# XXX
-# change
-pull:
-	git pull git@pixy:/home/public/git/nwt-projekt.git
-
-push:
-	git push origin master
