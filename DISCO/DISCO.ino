@@ -76,6 +76,9 @@
 //#define HARDCODED_LENGHT
 // end specials
 
+// upload
+// $ arduino-cli compile -up /dev/ttyUSB0 -b arduino:avr:uno . 
+
 // includes etc.
 #include <Arduino.h> // needet by arduino
 
@@ -1659,7 +1662,6 @@ void bohemian_rhapsody(){
 	led7(0);
 	// T6
 	if(refrain_play()==0){
-		// t_zweisechzehntel t_viersechzehntel
 		bais(t_sechzehntel);
 		bgis(t_sechzehntel);
 		bg(t_zweisechzehntel);
@@ -1783,7 +1785,7 @@ void bohemian_rhapsody(){
 		agis(t_viertel); agis(t_sechzehntel);
 		bcis(t_sechzehntel); d(t_neuanschlag);
 		bcis(t_sechzehntel_t); d(t_neuanschlag);
-		bcis(t_sechtehntel_t); d(t_neuanschlag);
+		bcis(t_sechzehntel_t); d(t_neuanschlag);
 		bcis(t_sechzehntel_t); d(t_neuanschlag);
 		bcis(t_achtel); d(t_neuanschlag);
 		bcis(t_achtel);
