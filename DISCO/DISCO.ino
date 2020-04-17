@@ -18,7 +18,7 @@
 ////// README:
 ////// DOKU am Ende der Datei
 ////// Quellen in der DOKU
-////// XXX = TODO = not so good
+////// X XX = T ODO = not so good (without space)
 ////// Bitte konfigurieren! (in '<config>[...]</config>')
 // <config>
 	//// pins definieren  
@@ -2889,8 +2889,16 @@ void bohemian_rhapsody(){
 		bg(t_halbe);
 		bgis(t_halbe);
 	}else{
-		bdis(t_halbe);
-		ah(t_halbe);
+		// XXX always in else if ==0
+		d(t_sechzehntel);
+		hh(t_sechzehntel);
+		adis(t_sechzehntel);
+		ag(t_sechzehntel);
+		aais(t_viertel); aais(t_sechzehntel);
+		hh(t_sechzehntel);
+		ad(t_sechzehntel);
+		af(t_sechzehntel);
+		aais(t_viertel);
 	}
 	led2(0);
 	servo(62);
@@ -2900,8 +2908,13 @@ void bohemian_rhapsody(){
 		bg(t_viertel);
 		bdis(t_viertel);
 	}else{
-		bc(t_halbe);
-		ah(t_viertel);
+		aais(t_sechzehntel);
+		bc(t_sechzehntel);
+		adis(t_sechzehntel);
+		ag(t_sechzehntel);
+		bc(t_viertel);
+		ag(t_achtel); ag(t_sechzehntel);
+		agis(t_sechzehntel);
 		ag(t_viertel);
 	}
 	led3(0);
@@ -2910,17 +2923,19 @@ void bohemian_rhapsody(){
 	if(refrain_play()==0){
 		bg(t_viertel);
 		bdis(t_viertel);
-	}else{
-		ah(t_viertel);
-		ag(t_viertel);
-	}
-	led4(0);
-	if(refrain_play()==0){ 
+		led4(0);
 		bd(t_viertel);
 		ag(t_viertel);
 	}else{
-		agis(t_viertel);
-		adis(t_viertel);
+		d(t_neuanschlag);
+		ag(t_achtel); ag(t_sechzehntel);
+		agis(t_sechzehntel);
+		ag(t_viertel);
+		led4(0);
+		af(t_achtel); af(t_sechzehntel);
+		agis(t_sechzehntel);
+		ag(t_achtel);
+		bg(t_achtel);
 	}
 	led2(1);
 	servo(-12);
@@ -2929,8 +2944,12 @@ void bohemian_rhapsody(){
 		afis(t_halbe);
 		aais(t_halbe);
 	}else{
-		ad(t_halbe);
-		ag(t_halbe);
+		agis(t_viertel);
+		ag(t_achtel);
+		agis(t_achtel);
+		aais(t_viertel) aais(t_achtel);
+		d(t_neuanshclag);
+		aais(t_achtel);
 	}
 	led5(0);
 	servo(-30);
@@ -2939,8 +2958,11 @@ void bohemian_rhapsody(){
 		bc(t_halbe);
 		bg(t_halbe);
 	}else{
-		agis(t_halbe);
-		bdis(t_halbe);
+		bc(t_viertel); bc(t_achtel);
+		d(t_neuanschlag);
+		bc(t_sechzehntel);
+		bd(t_sechzehntel);
+		aais(t_halbe);
 	}
 	led4(1);
 	servo(57);
