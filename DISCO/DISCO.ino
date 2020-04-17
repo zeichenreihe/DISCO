@@ -1703,7 +1703,25 @@ void bohemian_rhapsody(){
 	servo(30);
 	// T7
 	if(refrain_play()==0){
-		// XXX
+		d(t_sechzehntel);
+		hh(t_sechzehntel);
+		ac(t_sechzehntel);
+		ad(t_sechzehntel);
+		adis(t_sechzehntel);
+		af(t_sechzehntel);
+		ag(t_sechzehntel);
+		agis(t_sechzehntel);
+		aais(t_achtel);
+
+		hh(t_sechzehntel); 
+		ac(t_sechzehntel);
+		ad(t_sechzehntel);
+		adis(t_sechzehntel);
+		af(t_sechzehntel);
+		ag(t_sechzehntel_t);
+		agis(t_sechzehntel_t);
+		aais(t_sechzehntel_t);
+		bc(t_achtel);
 	}else{
 		d(t_achtel);
 		adis(t_achtel);
@@ -1718,7 +1736,16 @@ void bohemian_rhapsody(){
 	servo(20);
 	// S11 T1
 	if(refrain_play()==0){
-		d(t_ganze);
+		bc(t_viertel);
+		d(t_achtel);
+		bd(t_sechzehntel);
+		bdis(t_sechzehntel);
+		bc(t_achtel);
+		bd(t_sechzehntel);
+		bdis(t_sechzehntel);
+		bc(t_achtel);
+		bd(t_sechzehntel);
+		bdis(t_sechzehntel);
 	}else{
 		adis(t_achtel);
 		ac(t_achtel);
@@ -1733,7 +1760,12 @@ void bohemian_rhapsody(){
 	servo(10);
 	// T2
 	if(refrain_play()==0){
-		d(t_ganze);
+		bf(t_viertel);
+		d(t_achtel);
+		adis(t_sechzehntel);
+		af(t_sechzehntel);
+		agis(t_viertel);
+		bf(t_viertel);
 	}else{
 		agis(t_achtel);
 		af(t_achtel);
@@ -1748,7 +1780,16 @@ void bohemian_rhapsody(){
 	servo(0);
 	// T3
 	if(refrain_play()==0){
-		d(t_ganze);
+		agis(t_viertel); agis(t_sechzehntel);
+		bcis(t_sechzehntel); d(t_neuanschlag);
+		bcis(t_sechzehntel_t); d(t_neuanschlag);
+		bcis(t_sechtehntel_t); d(t_neuanschlag);
+		bcis(t_sechzehntel_t); d(t_neuanschlag);
+		bcis(t_achtel); d(t_neuanschlag);
+		bcis(t_achtel);
+		acis(t_achtel); acis(t_sechzehntel);
+		ad(t_zweisechzehntel);
+		adis(t_zweisechzehntel);
 	}else{
 		bcis(t_achtel); d(t_neuanschlag);
 		bcis(t_sechzehntel); d(t_neuanschlag);
@@ -1766,7 +1807,12 @@ void bohemian_rhapsody(){
 	led0(1); led7(1);
 	servo(-10);
 	// F T4
-	ae(t_viertel); d(t_neuanschlag);
+	if(refrain_play()==0){
+		aa(t_achtel);
+		d(t_achtel);
+	}else{
+		ae(t_viertel); d(t_neuanschlag);
+	}
 	led0(1);
 	ae(t_viertel); d(t_neuanschlag);
 	led7(1);

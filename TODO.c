@@ -50,8 +50,8 @@ int servo(){
 	return FINISH;
 }
 int guitarr(){
-	printf("E T4");
-	return TODO;
+	printf("STATE: guitarr: \tFINICH\n");
+	return FINISH;
 }
 
 int main(){
