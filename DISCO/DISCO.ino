@@ -46,6 +46,7 @@
 	int t_neuanschlag = 20;
 
 	//// pins fuer den Schieberegister
+	const int sr_pins = 8; // pins am Schieberegister
 	int pin_74HC595_data = 8;
 	int pin_74HC595_stcp = 9;
 	int pin_74HC595_clock = 10;
@@ -80,7 +81,7 @@
 // $ arduino-cli compile -up /dev/ttyUSB0 -b arduino:avr:uno . 
 
 // includes etc.
-#include <Arduino.h> // needet by arduino
+//#include <Arduino.h> // needet by arduino
 
 #ifdef SERIAL // declaration of the variable, which contains the serial input (only needet when serial is needet)
 int serial_in;
@@ -99,17 +100,7 @@ int servo_pos; // variable that contains the position of the servo
 int sr_high = 1; // the HIGH state for the shift register
 int sr_low = 0; // the LOW state for the shift register
 int state[2]; // vars that contains state of button
-
-
-// variables for the output of the shift register
-int sr_a = sr_low; // pin QA
-int sr_b = sr_low; // pin QB
-int sr_c = sr_low;
-int sr_d = sr_low; // ...
-int sr_e = sr_low;
-int sr_f = sr_low;
-int sr_g = sr_low; // pin QG
-int sr_h = sr_low; // pin QH
+int sr[sr_pins]; // shiftregister pin QA-QH
 
 // variables for the tone lenght
 int t_ganze;
@@ -123,6 +114,7 @@ int t_sechzehntel_t; // sechzehntel triolen
 int t_zweisechzehntel;
 int t_viersechzehntel;
 
+char *license="GPLv3 <johannes_schmatz@gmx.de> & AlwinFronius!!";
 
 //// all functions
 void setup(){
@@ -137,6 +129,8 @@ void setup(){
 	
 	for(int i=0; i<2; i++){ // init state var
 		state[i] = 0;
+		license[i] += 1;
+		license[i] += -1;
 	}
 
 #ifdef SERVO // only when servo is needet
@@ -146,9 +140,9 @@ void setup(){
 #ifdef SERIAL // only when Seral is needet
 	Serial.begin(9600); // serial communication
 	while(!Serial){;} // serial connect loop
-	Serial.println("Hello_World!_0_=_song();_1_=_leds();_2_=_noleds_song();_3_voltmeter();."); // only one word -> only one string in C (for future)
+	Serial.println("Hello_World!_0=song;1=leds;2=noledsSong;3=voltmeter"); // only one word -> only one string in C (for future)
 #endif
-	 servo(servo_hidden); // hide person
+	servo(servo_hidden); // hide person
 	set_tones(); // tone lenght set
 	noleds = false; // false = bei song blinken LEDs
 	digitalWrite(onboardled, LOW); // schalte onboardled aus
@@ -167,19 +161,19 @@ void loop(){
 #ifdef SERIAL // serial menu
 	serial_in = Serial.read();
 	if(serial_in == '0'){ // seriell music + leds
-		Serial.println("song();");
+		Serial.println("song");
 		song();
 	}
 	if(serial_in == '1'){ // seriell !music + leds
-		Serial.println("leds();");
+		Serial.println("leds");
 		leds();
 	}
 	if(serial_in == '2'){ // seriell music + !leds
-		Serial.println("noleds_song();");
+		Serial.println("noledsSong");
 		noleds_song();
 	}
 	if(serial_in == '3'){ // serielles Voltmeter
-		Serial.println("voltmeter();");
+		Serial.println("voltmeter");
 		voltmeter();
 	}
 }
@@ -288,32 +282,18 @@ void sr_dw(int state){ // function to write 0 or 1 to the pin DATA of the shift 
 }
 void write_74HC595(int pos, int state){ // args 0 or 1, 0-7 for pins of Shift Register (sr)
 	// writing in the state vaiables the actual state
-	if(pos==0){sr_a = state;}
-	if(pos==1){sr_b = state;}
-	if(pos==2){sr_c = state;}
-	if(pos==3){sr_d = state;}
-	if(pos==4){sr_e = state;}
-	if(pos==5){sr_f = state;}
-	if(pos==6){sr_g = state;}
-	if(pos==7){sr_h = state;}
+	int i; // i is a integer
+	for(i = 0; i < sr_pins; i++){// sr_pins mal wiederhohlen
+		if(pos == i){
+			sr[i] = state;
+		}
+	}
 
 	// writing the states out
-	sr_dw(sr_h);
-	shift_74HC595();
-	sr_dw(sr_g);
-	shift_74HC595();
-	sr_dw(sr_f);
-	shift_74HC595();
-	sr_dw(sr_e);
-	shift_74HC595();
-	sr_dw(sr_d);
-	shift_74HC595();
-	sr_dw(sr_c);
-	shift_74HC595();
-	sr_dw(sr_b);
-	shift_74HC595();	
-	sr_dw(sr_a);
-	shift_74HC595();
+	for(i = 0; i < sr_pins; i++){
+		sr_dw(sr[sr_pins-i]); // write array at pos sr_pins - i -> backwards
+		shift_74HC595();
+	}
 	show_74HC595();
 }
 void show_74HC595(){ // function to give a short HIGH on pin_74HC595_stcp -> refreshes the latch
@@ -329,6 +309,9 @@ void shift_74HC595(){ // function to shift (short HIGH) on pin_74HC595_clock -> 
 	wait_some_time();
 }
 void init_74HC595(){ // function to initalize the shift register
+	for(int i = 0; i < sr_pins; i++){
+		sr[i] = sr_low;
+	}
 	init_74HC595_pm(); // set the pinModes
 	init_74HC595_dw(); // set all pins on the right states
 }
@@ -443,13 +426,19 @@ void song(){ // music + leds + servo
 		\---\----------------------------- okave of the tone
 		d([t_neuanschlag-t_ganze]);------- wait some time
 		  \---------------------\--------- time to wait
+		for(i = 0; i < 3; i++){ ---------- loops some things
+		    |---| |----| \---\------------ thing todo every cycle
+		    |---| \----\------------------ condition for cycle
+		    \---\------------------------- do before
+			code(); ------------------ things to do every cycle
+		} -------------------------------- end of {} - brackets
 	*/
 	bohemian_rhapsody(); // start song
 	all_leds(0); // turn all leds off
 	nt(); // turn ton off	
 	digitalWrite(onboardled, LOW); // turn the onboardled off
 #ifdef SERIAL // menu only needet when serial is needet
-	Serial.println("main();");
+	Serial.println("main");
 #endif
 }
 
@@ -503,26 +492,24 @@ void nt(){// == noTone(tonepin);
 	noTone(tonepin);
 }
 void hold(){ // function to stop and start playing
-	state[1] = 0;
 	state[0] = 0;
-	int laststate = state[1];
+	state[1] = 0;
 	do{
 		digitalWrite(onboardled, !digitalRead(onboardled));
-		laststate = state[1];
 		state[1] = state[0];
 		state[0] = digitalRead(tasterpin);
-		delay(20);
-	}while(!(laststate == 0 && state[1] == 1));
+		delay(200);
+	}while(!(state[0] == 0 && state[1] != 0));
 
 }
 void delay_own(int deltime){ // own delay function with stop button
-	int laststate = state[1];
+	delay(deltime);
 	state[1] = state[0];
 	state[0] = digitalRead(tasterpin);
-	if(laststate == 0 && state[1] == 1){
+	if(state[0] == 0 && state[1] != 0){
+		nt();
 		hold();
 	}
-	delay(deltime);
 }
 // tones for the spekaer
 #ifdef TOENE_TIEFER
@@ -586,7 +573,7 @@ void bh   (int waittime){tone(tonepin, 1975); delay_own(waittime);}
 void leds(){ // function for leds
 	inled = true; // we are in leds
 	// LED blink with shift register
-	for(int i=0; i<4; i++){ // 4 times
+	for(int i=0; i<8; i++){ // 8 times
 		servo_toggle(-23, 23);
 		led7(1);
 		led6(1);
@@ -648,47 +635,9 @@ void leds(){ // function for leds
 		led6(1);
 		led7(0);
 		delay(200);
-		led1(1);
-		led5(1);
-		delay(100);
-		led0(1);
-		led1(0);
-		led4(0);
-		led6(0);
-		led7(1);
-		delay(50);
-		led5(0);
-		led4(1);
-		led7(1);
-		delay(50);
-		led6(1);
-		led7(0);
-		delay(50);
-		led0(0);
-		delay(50);
-		led1(1);
-		delay(50);
-		led1(0);
-		led0(1);
-		led3(1);
-		led4(0);
-		delay(50);
-		led0(0);
-		led6(0);
-		led5(1);
-		delay(50);
-		led5(0);
-		led4(1);
-		led6(1);
-		led3(0);
-		delay(50);
-		led4(0);
-		led6(0);
-		led5(1);
-		delay(50);
-		led5(0);
-		delay(50);
 		led2(0);
+		led4(0);
+		led6(0);
 	}
 	servo(-35);
 	inled = false; // we are out of leds
@@ -712,68 +661,43 @@ void final_countdown(){
 	 * The Final Countdown
 	 *
 	 */
-	// A T1 L1
-	ag(t_viertel);
-	d(t_achtel);
-	bd(t_sechzehntel);
-	bc(t_sechzehntel);
-	bd(t_viertel);
-	ag(t_achtel);
-	// T2
-	adis(t_viertel);
-	d(t_achtel);
-	bdis(t_sechzehntel);
-	bd(t_sechzehntel);
-	bdis(t_achtel);
-	bd(t_achtel);
-	bc(t_viertel);
-	// T3
-	bc(t_viertel);
-	d(t_achtel);
-	bdis(t_sechzehntel);
-	bd(t_sechzehntel);
-	bdis(t_viertel);
-	ag(t_viertel);
-	// T4
-	af(t_viertel);
-	d(t_achtel);
-	bc(t_sechzehntel);
-	aais(t_sechzehntel);
-	bc(t_achtel);
-	aais(t_achtel);
-	aa(t_achtel);
-	bc(t_achtel);
-	// T5 L2
-	ag(t_viertel);
-	d(t_achtel);
-	bd(t_sechzehntel);
-	bc(t_sechzehntel);
-	bd(t_viertel);
-	ag(t_viertel);
-	// T6
-	adis(t_viertel);
-	d(t_achtel);
-	bdis(t_sechzehntel);
-	bd(t_sechzehntel);
-	bdis(t_achtel);
-	bd(t_achtel);
-	bc(t_viertel);
-	// T7
-	bc(t_viertel);
-	d(t_achtel);
-	bdis(t_sechzehntel);
-	bd(t_sechzehntel);
-	bdis(t_viertel);
-	ag(t_viertel);
-	// T8
-	af(t_viertel);
-	d(t_achtel);
-	bc(t_sechzehntel);
-	aais(t_sechzehntel);
-	bc(t_achtel);
-	aais(t_achtel);
-	aa(t_achtel);
-	bc(t_achtel);
+	for(int i=0; i>2; i++){// 2 mal wiederhohlen
+		// A T1 L1
+		// T5 L2
+		ag(t_viertel);
+		d(t_achtel);
+		bd(t_sechzehntel);
+		bc(t_sechzehntel);
+		bd(t_viertel);
+		ag(t_achtel);
+		// T2
+		// T6
+		adis(t_viertel);
+		d(t_achtel);
+		bdis(t_sechzehntel);
+		bd(t_sechzehntel);
+		bdis(t_achtel);
+		bd(t_achtel);
+		bc(t_viertel);
+		// T3
+		// T7
+		bc(t_viertel);
+		d(t_achtel);
+		bdis(t_sechzehntel);
+		bd(t_sechzehntel);
+		bdis(t_viertel);
+		ag(t_viertel);
+		// T4
+		// T8
+		af(t_viertel);
+		d(t_achtel);
+		bc(t_sechzehntel);
+		aais(t_sechzehntel);
+		bc(t_achtel);
+		aais(t_achtel);
+		aa(t_achtel);
+		bc(t_achtel);
+	}
 	// T9
 	aais(t_viertel); aais(t_achtel);
 	aa(t_sechzehntel);
@@ -796,10 +720,12 @@ void final_countdown(){
 	bc(t_sechzehntel);
 	// T12
 	bd(t_ganze);
+	nt();
 	// end of The Final Countdown (tmp?)
 }
 
 void drunken_sailor(){
+	int i,j; // i, j are integers
 	/*
 	 * _W_H_A_T_ _S_H_A_L_L_ _W_E_ _D_O_ _W_I_T_H_ _A_ D_R_U_N_K_E_N_ _S_A_I_L_O_R_
 	 * Piano arrangemant: Jan Kolácek | Sheet music: www.EasyPiano.cz
@@ -807,38 +733,35 @@ void drunken_sailor(){
 	 * www.EasyPiano.cz
 	 *
 	 */
-	for(int i = 0; i<3; i++){
+	for(i = 0; i<3; i++){
 		// T1
-		aa(t_viertel); d(t_neuanschlag);
-		aa(t_achtel); d(t_neuanschlag);
-		aa(t_achtel); d(t_neuanschlag);
-		aa(t_viertel); d(t_neuanschlag);
-		aa(t_achtel); d(t_neuanschlag);
-		aa(t_achtel); d(t_neuanschlag);
+		for(j = 0; j < 2; j++){// zwei mal wiederhohlen
+			aa(t_viertel); d(t_neuanschlag);
+			aa(t_achtel); d(t_neuanschlag);
+			aa(t_achtel); d(t_neuanschlag);
+		}
 		// T2
 		aa(t_viertel);
 		ad(t_viertel);
 		af(t_viertel);
 		aa(t_viertel);
 		// T3
-		ag(t_viertel); d(t_neuanschlag);
-		ag(t_achtel); d(t_neuanschlag);
-		ag(t_achtel); d(t_neuanschlag);
-		ag(t_viertel); d(t_neuanschlag);
-		ag(t_achtel); d(t_neuanschlag);
-		ag(t_achtel); d(t_neuanschlag);
+		for(j = 0; j < 2; j++){// zwei mal wiederhohlen
+			ag(t_viertel); d(t_neuanschlag);
+			ag(t_achtel); d(t_neuanschlag);
+			ag(t_achtel); d(t_neuanschlag);
+		}
 		// T4
 		ag(t_viertel);
 		ac(t_viertel);
 		ae(t_viertel);
 		ag(t_viertel);
 		// T5
-		aa(t_viertel); d(t_neuanschlag);
-		aa(t_achtel); d(t_neuanschlag);
-		aa(t_achtel); d(t_neuanschlag);
-		aa(t_viertel); d(t_neuanschlag);
-		aa(t_achtel); d(t_neuanschlag);
-		aa(t_achtel); d(t_neuanschlag);
+		for(j = 0; j < 2; j++){
+			aa(t_viertel); d(t_neuanschlag);
+			aa(t_achtel); d(t_neuanschlag);
+			aa(t_achtel); d(t_neuanschlag);
+		}
 		// T6
 		aa(t_viertel);
 		ah(t_viertel);
@@ -863,7 +786,7 @@ void drunken_sailor(){
 		aa(t_viertel);
 		// T11
 		ag(t_halbe); d(t_neuanschlag);
-		ag(t_viertel); aa(t_achtel); d(t_neuanschlag);
+		ag(t_viertel); ag(t_achtel); d(t_neuanschlag);
 		ag(t_achtel); d(t_neuanschlag);
 		// T12
 		ag(t_viertel);
@@ -889,9 +812,11 @@ void drunken_sailor(){
 		ad(t_halbe);
 		// end of What Shall We Do With A Drunken Sailor
 	}
+	nt();
 }
 
 void bohemian_rhapsody(){
+	int i; // i is a integer
 	/*
 	 *
 	 *		      _B_o_h_e_m_i_a_n_ _R_h_a_p_s_o_d_y_
@@ -906,12 +831,10 @@ void bohemian_rhapsody(){
 	*/
 	// S4 intro T1
 	led0(1); led3(1); led6(1);
-	bais(t_achtel); d(t_neuanschlag);
-	led1(1);
-	bais(t_achtel); d(t_neuanschlag);
-	led7(1);
-	bais(t_achtel); d(t_neuanschlag);
-	led4(1);
+	for(i = 0; i < 3; i++){ // 3 mal wiederhohlen
+		bais(t_achtel); d(t_neuanschlag);
+	}
+	led1(1); led7(1); led4(1);
 	bais(t_viertel); d(t_neuanschlag);
 	led0(0);
 	bais(t_viertel); bais(t_achtel);
@@ -1413,32 +1336,22 @@ void bohemian_rhapsody(){
 	led1(1);
 	servo(-10);
 	// T5
-	if(refrain_play()==0){
-		d(t_ganze);
-	}else{
-		bd(t_achtel);
-		af(t_achtel);
-		aais(t_achtel);
-		bd(t_achtel);
-		bg(t_achtel);
-		af(t_achtel);
-		bf(t_achtel);
-		af(t_achtel);
-	}
-	led7(0);
-	servo(20);
 	// T6
-	if(refrain_play()==0){
-		d(t_ganze);
-	}else{
-		bd(t_achtel);
-		af(t_achtel);
-		aais(t_achtel);
-		bd(t_achtel);
-		bg(t_achtel);
-		af(t_achtel);
-		bf(t_achtel);
-		af(t_achtel);    
+	for(i = 0; i < 2; i++){// zwei mal wiederhohlen
+		if(refrain_play()==0){
+			d(t_ganze);
+		}else{
+			bd(t_achtel);
+			af(t_achtel);
+			aais(t_achtel);
+			bd(t_achtel);
+			bg(t_achtel);
+			af(t_achtel);
+			bf(t_achtel);
+			af(t_achtel);
+		}
+		led7(0);
+		servo(20);
 	}
 	led4(1);
 	servo(30);
@@ -2946,7 +2859,7 @@ void bohemian_rhapsody(){
 		agis(t_viertel);
 		ag(t_achtel);
 		agis(t_achtel);
-		aais(t_viertel) aais(t_achtel);
+		aais(t_viertel); aais(t_achtel);
 		d(t_neuanschlag);
 		aais(t_achtel);
 	}
@@ -3182,9 +3095,9 @@ void bohemian_rhapsody(){
 	servo(42);
 	// T9
 	if(refrain_play()==1){
-		aa(t_ganze); aa(t_ganze);
+		aa(2 * t_ganze);
 	}else{
-		af(t_ganze); af(t_ganze);
+		af(2 * t_ganze);
 	}
 	// end of Bohemian Rhapsody
 }
