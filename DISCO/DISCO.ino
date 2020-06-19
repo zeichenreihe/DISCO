@@ -46,7 +46,7 @@
 	int t_neuanschlag = 20;
 
 	//// pins fuer den Schieberegister
-	const int sr_pins = 8; // pins am Schieberegister
+	const int sr_pins = 7; // pins am Schieberegister
 	int pin_74HC595_data = 8;
 	int pin_74HC595_stcp = 9;
 	int pin_74HC595_clock = 10;
@@ -54,14 +54,14 @@
 
 	///// sonder funktionen
 	/// Serielle Steuerung
-	#define SERIAL
+	#define SERIAL_ACTIVE
 	
 	/// toene eine oktave tiefer 
 	//#define TOENE_TIEFER
 
 	/// servo
 	#define SERVO
-	int servo_null = 75;
+	int servo_null = 67;
 
 	///// refrain spielen <ja/nein/schalter waehlen>
 	/// nur einen waehlen
@@ -83,7 +83,7 @@
 // includes etc.
 //#include <Arduino.h> // needet by arduino
 
-#ifdef SERIAL // declaration of the variable, which contains the serial input (only needet when serial is needet)
+#ifdef SERIAL_ACTIVE // declaration of the variable, which contains the serial input (only needet when serial is needet)
 int serial_in;
 #endif
 
@@ -100,7 +100,7 @@ int servo_pos; // variable that contains the position of the servo
 int sr_high = 1; // the HIGH state for the shift register
 int sr_low = 0; // the LOW state for the shift register
 int state[2]; // vars that contains state of button
-int sr[sr_pins]; // shiftregister pin QA-QH
+int sr[sr_pins + 1]; // shiftregister pin QA-QH
 
 // variables for the tone lenght
 int t_ganze;
@@ -114,7 +114,7 @@ int t_sechzehntel_t; // sechzehntel triolen
 int t_zweisechzehntel;
 int t_viersechzehntel;
 
-char *license="GPLv3 <johannes_schmatz@gmx.de> & AlwinFronius!!";
+char license[]="GPLv3: <johannes_schmatz@gmx.de> and AlwinFronius !!!";
 
 //// all functions
 void setup(){
@@ -129,18 +129,17 @@ void setup(){
 	
 	for(int i=0; i<2; i++){ // init state var
 		state[i] = 0;
-		license[i] += 1;
-		license[i] += -1;
 	}
 
 #ifdef SERVO // only when servo is needet
 	myservo.attach(servopin); // verknüpft den Servomotor an servopin mit dem Servo-Objekt
 #endif
 
-#ifdef SERIAL // only when Seral is needet
+#ifdef SERIAL_ACTIVE // only when Seral is needet
 	Serial.begin(9600); // serial communication
 	while(!Serial){;} // serial connect loop
 	Serial.println("Hello_World!_0=song;1=leds;2=noledsSong;3=voltmeter"); // only one word -> only one string in C (for future)
+	Serial.println(license);
 #endif
 	servo(servo_hidden); // hide person
 	set_tones(); // tone lenght set
@@ -158,7 +157,7 @@ void loop(){
 	if(digitalRead(lichtschrankenpin) == HIGH){ // lichtsensor
 		leds();
 	}
-#ifdef SERIAL // serial menu
+#ifdef SERIAL_ACTIVE // serial menu
 	serial_in = Serial.read();
 	if(serial_in == '0'){ // seriell music + leds
 		Serial.println("song");
@@ -283,14 +282,14 @@ void sr_dw(int state){ // function to write 0 or 1 to the pin DATA of the shift 
 void write_74HC595(int pos, int state){ // args 0 or 1, 0-7 for pins of Shift Register (sr)
 	// writing in the state vaiables the actual state
 	int i; // i is a integer
-	for(i = 0; i < sr_pins; i++){// sr_pins mal wiederhohlen
+	for(i = 0; i <= sr_pins; i++){// sr_pins mal wiederhohlen
 		if(pos == i){
 			sr[i] = state;
 		}
 	}
 
 	// writing the states out
-	for(i = 0; i < sr_pins; i++){
+	for(i = 0; i <= sr_pins; i++){
 		sr_dw(sr[sr_pins-i]); // write array at pos sr_pins - i -> backwards
 		shift_74HC595();
 	}
@@ -437,7 +436,7 @@ void song(){ // music + leds + servo
 	all_leds(0); // turn all leds off
 	nt(); // turn ton off	
 	digitalWrite(onboardled, LOW); // turn the onboardled off
-#ifdef SERIAL // menu only needet when serial is needet
+#ifdef SERIAL_ACTIVE // menu only needet when serial is needet
 	Serial.println("main");
 #endif
 }
@@ -474,9 +473,9 @@ void led_blink(){ // blinking leds (for init)
 	d(100);
 	led5(1);
 	d(100);
-	led6(1);
-	d(100);
 	led7(1);
+	d(100);
+	led6(1);
 	d(500);
 	all_leds(0);
 	d(500);
@@ -642,7 +641,7 @@ void leds(){ // function for leds
 	servo(-35);
 	inled = false; // we are out of leds
 	delay(1000); // servo time to move
-#ifdef SERIAL // menu only needet when serial is needet
+#ifdef SERIAL_ACTIVE // menu only needet when serial is needet
 	Serial.println("main();");
 #endif
 }
@@ -3113,7 +3112,7 @@ DESCRIPTION
 OPTIONS
 	Man kann folgende Optionen im <config> Berich aktivieren (auskommentieren):
 
-	 #define SERIAL
+	 #define SERIAL_ACTIVE
 		aktiviert die serialle Schnittstelle zur Kommunikation mit einem
 		Computer. Man kann auf der seriellen Schnittstelle folgende Zeichen
 		senden:
